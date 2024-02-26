@@ -6,10 +6,20 @@ const { generateDependencyReport } = require('@discordjs/voice');
 
 console.log(generateDependencyReport());
 
+const LOG_FILE = 'voice-log.txt' // must create this file before run bot
 const TOKEN = process.env.BOT_TOKEN
 const client = new Client({ 
     intents: 3241725 // xD full intents ??
 }); // prepare client
+
+
+function writeToLog(message) {
+    fs.appendFile(LOG_FILE, message + '\n', err => {
+        if (err) {
+            console.error('Lỗi khi ghi log vào file:', err);
+        }
+    });
+}
 
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);
@@ -72,8 +82,10 @@ client.on(Events.InteractionCreate, async interaction => {
 client.on("voiceStateUpdate", (oldVoiceState, newVoiceState) => { // Listeing to the voiceStateUpdate event
     if (newVoiceState.channel) { // The member connected to a channel.
         console.log(`${newVoiceState.member.user.tag} connected to ${newVoiceState.channel.name}.`);
+        writeToLog(`${newVoiceState.member.user.tag} connected to ${newVoiceState.channel.name}.`);
     } else if (oldVoiceState.channel) { // The member disconnected from a channel.
         console.log(`${oldVoiceState.member.user.tag} disconnected from ${oldVoiceState.channel.name}.`)
+        writeToLog(`${oldVoiceState.member.user.tag} disconnected from ${oldVoiceState.channel.name}.`)
     };
 });
 
