@@ -1,9 +1,11 @@
-const { Client, Intents, SlashCommandBuilder } = require('discord.js');
+const fs = require('fs');
 const dictionary = require('@vntk/dictionary');
-require('dotenv').config()
-const client = new Client({ intents: 3241725 });
+const Discord = require('discord.js');
+const client = new Discord.Client({
+    intents: 3241725
+});
 const PREFIX = '!noitu ';
-
+require('dotenv').config()
 const LOG_FILE_PATH = 'voice-log.txt'; // Đường dẫn của file log
 
 let isGameRunning = false;
@@ -22,45 +24,50 @@ function writeToLog(message) {
     });
 }
 
-client.on('interactionCreate', async interaction => {
-    if (!interaction.isCommand()) return;
+client.on('message', async message => {
+    if (message.author.bot) return;
 
-    const command = interaction.commandName;
-    const args = interaction.options.getString('word');
+    const args = message.content.trim().split(/ +/);
+    const command = args.shift().toLowerCase();
 
-    if (command === 'ping') {
+    if (command === `${PREFIX}ping`) {
         const startTime = Date.now();
-        await interaction.reply({ content: 'Pinging...', ephemeral: true });
+        const sent = await message.channel.send('Pinging...');
         const endTime = Date.now();
-        await interaction.editReply({ content: `Pong! Latency is ${endTime - startTime}ms.`, ephemeral: true });
-    } else if (command === 'start') {
+        sent.edit(`Pong! Latency is ${endTime - startTime}ms.`);
+    } else if (command === `${PREFIX}start`) {
         if (isGameRunning) {
-            await interaction.reply({ content: 'Trò chơi đã bắt đầu!', ephemeral: true });
+            message.channel.send('Trò chơi đã bắt đầu!');
         } else {
             isGameRunning = true;
-            await interaction.reply({ content: 'Trò chơi đã bắt đầu! Hãy ghi ra một từ tiếng Việt có 2 tiếng.', ephemeral: true });
+            message.channel.send('Trò chơi đã bắt đầu! Hãy ghi ra một từ tiếng Việt có 2 tiếng.');
         }
-    } else if (command === 'word') {
-        if (!args) {
-            await interaction.reply({ content: 'Vui lòng ghi ra một từ tiếng Việt có 2 tiếng.', ephemeral: true });
+    } else if (isGameRunning && command === `${PREFIX}word`) {
+        const newWord = args.join(' ').trim();
+        if (!newWord) {
+            message.channel.send('Vui lòng ghi ra một từ tiếng Việt có 2 tiếng.');
             return;
         }
 
-        if (lastWord && args.charAt(0) !== lastWord.slice(-1)) {
-            await interaction.reply({ content: `Từ bạn ghi ra không hợp lệ. Hãy bắt đầu bằng chữ "${lastWord.slice(-1)}".`, ephemeral: true });
+        if (lastWord && newWord.charAt(0) !== lastWord.slice(-1)) {
+            message.channel.send(`Từ bạn ghi ra không hợp lệ. Hãy bắt đầu bằng chữ "${lastWord.slice(-1)}".`);
             return;
         }
 
-        if (!dictionary.has(args)) {
-            await interaction.reply({ content: 'Từ bạn ghi ra không có trong từ điển tiếng Việt.', ephemeral: true });
+        if (!dictionary.has(newWord)) {
+            message.channel.send('Từ bạn ghi ra không có trong từ điển tiếng Việt.');
             return;
         }
 
-        lastWord = args;
-        await interaction.reply({ content: `Từ "${args}" đã được ghi lại. Lượt kế tiếp!`, ephemeral: true });
+        try {
+            await message.react('✅'); // React emoji tick vào tin nhắn
+            lastWord = newWord;
 
-        // Ghi tin nhắn vào file log
-        writeToLog(`[${new Date().toLocaleString()}] ${interaction.user.username}: ${args}`);
+            // Ghi tin nhắn vào file log
+            writeToLog(`[${new Date().toLocaleString()}] ${message.author.username}: ${message.content}`);
+        } catch (error) {
+            console.error('Lỗi khi thêm emoji phản ứng vào tin nhắn:', error);
+        }
     }
 });
 
