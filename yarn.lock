@@ -121,6 +121,11 @@
   resolved "https://registry.yarnpkg.com/@vladfrangu/async_event_emitter/-/async_event_emitter-2.2.4.tgz#d3537432c6db6444680a596271dff8ea407343b3"
   integrity sha512-ButUPz9E9cXMLgvAW8aLAKKJJsPu1dY1/l/E8xzLFuysowXygs6GBcyunK9rnGC4zTsnIc2mQo71rGw9U+Ykug==
 
+"@vntk/dictionary@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@vntk/dictionary/-/dictionary-1.0.0.tgz#59fd0e6abcbaab55abe3a3e64ed92e89be2fab75"
+  integrity sha512-KT5b8pDjU9pNrkBfOwz6SJUrCwVc1R3ZeFU7Ara4xaNZXMUMUI7dD9do3QxT+ZmobBUbBd6OJVCTpP894AwfxQ==
+
 discord-api-types@0.37.61:
   version "0.37.61"
   resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.37.61.tgz#9dd8e58c624237e6f1b23be2d29579af268b8c5b"
