@@ -163,7 +163,7 @@ client.on('messageCreate', async message => {
     // sendMessageToChannel(`Từ #${words.length + 1}: \`${tu.toLowerCase()}\``)
     
     if(!checkIfHaveAnswerInDb(tu)) {
-        sendMessageToChannel(`${message.author.displayName} đã chiến thắng lượt này! Lượt chơi kết thúc.`)
+        sendMessageToChannel(`${message.author.displayName} đã chiến thắng sau ${words.length} lượt! Trò chơi kết thúc.`)
         isRunning = false
         words = []
         return
