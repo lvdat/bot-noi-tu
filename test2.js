@@ -93,13 +93,6 @@ client.on('messageCreate', async message => {
         return
     }
 
-    if(!dictionary.has(tu)) {
-        // check in dictionary
-        message.react('❌')
-        sendMessageToChannel('Từ này không có trong từ điển tiếng Việt!')
-        return
-    }
-
     if(isWordExist(tu)) {
         // check used word
         message.react('❌')
@@ -115,6 +108,13 @@ client.on('messageCreate', async message => {
             sendMessageToChannel('Từ này không bắt đầu với tiếng `' + args2[args2.length - 1] + '`')
             return
         }
+    }
+
+    if(!dictionary.has(tu)) {
+        // check in dictionary
+        message.react('❌')
+        sendMessageToChannel('Từ này không có trong từ điển tiếng Việt!')
+        return
     }
 
     message.react('✅')
