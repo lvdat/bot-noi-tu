@@ -84,11 +84,10 @@ client.on('messageCreate', async message => {
         return
     }
     let tu = message.content.trim()
-    let lastWord = words[words.length - 1]
-    let args = tu.split(/ +/)
+    let args1 = tu.split(/ +/)
 
     // check if words have or more than 1 space
-    if (!(args.length > 1)) {
+    if (!(args1.length > 1)) {
         message.react('❌')
         sendMessageToChannel('Vui lòng nhập từ có chứa nhiều hơn 2 tiếng!')
         return
@@ -108,6 +107,16 @@ client.on('messageCreate', async message => {
         return
     }
 
+    if (words.length > 0) {
+        const lastWord = words[words.length - 1].word
+        const args2 = lastWord.split(/ +/)
+        if (!(args1[0] === args2[args2.length - 1])) {
+            message.react('❌')
+            sendMessageToChannel('Từ này không bắt đầu với tiếng `' + args2[args2.length - 1] + '`')
+            return
+        }
+    }
+
     message.react('✅')
     sendMessageToChannel(`Từ #${words.length + 1}: \`${tu.toLowerCase()}\``)
     words.push({
@@ -118,7 +127,7 @@ client.on('messageCreate', async message => {
         }
     })
 
-    console.log(`current world: ${JSON.stringify(words)}`)
+    console.log(`current words array: ${JSON.stringify(words)}`)
 
 })
 
