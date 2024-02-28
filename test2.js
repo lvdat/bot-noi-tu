@@ -18,6 +18,9 @@ const client = new Client({
 const GAME_CHANNEL_ID = process.env.GAME_CHANNEL_ID
 let isRunning = false
 let words = []
+const dicData = dictionary.lower_words
+
+console.log(dicData)
 
 // We create a collection for commands
 client.commands = new Collection()
@@ -56,6 +59,19 @@ const isWordExist = (word) => {
         }
     }
     return false;
+}
+
+const checkIfHaveAnswerInDb = (word) => {
+    let w = word.split(/ +/)
+    let lc = w[w.length - 1]
+    for (let i = 0; i < dicData.length; i++) {
+        let tempw = dicData[i].split(/ +/)
+        if (tempw.length > 1 && tempw[0] === lc && !isWordExist(dicData[i])) {
+            // detect word
+            return true
+        }
+    }
+    return false
 }
 
 client.on('messageCreate', async message => {
@@ -135,17 +151,26 @@ client.on('messageCreate', async message => {
             }
         )
 
-    message.react('✅')
-    // sendMessageToChannel(`Từ #${words.length + 1}: \`${tu.toLowerCase()}\``)
-    sendMessageToChannel({
-        embeds: [wordEmbed]
-    })
     words.push({
         word: tu,
         player: {
             id: message.author.id,
             name: message.author.displayName
         }
+    })
+
+    message.react('✅')
+    // sendMessageToChannel(`Từ #${words.length + 1}: \`${tu.toLowerCase()}\``)
+    
+    if(!checkIfHaveAnswerInDb(tu)) {
+        sendMessageToChannel(`${message.author.displayName} đã chiến thắng lượt này! Lượt chơi kết thúc.`)
+        isRunning = false
+        words = []
+        return
+    }
+    
+    sendMessageToChannel({
+        embeds: [wordEmbed]
     })
 
     console.log(`current words array: ${JSON.stringify(words)}`)
