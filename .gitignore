@@ -130,3 +130,5 @@ dist
 .pnp.*
 voice-log.txt
 data/data.json
+query.txt
+score.txt
