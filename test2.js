@@ -93,7 +93,8 @@ client.on('messageCreate', async message => {
 
     if(words.includes(tu)) {
         message.react('❌')
-        sendMessageToChannel('Từ này đã được sử dụng trong lượt chơi rồi!')
+        sendMessageToChannel('Từ này đã được sử dụng!')
+        return
     }
 
     message.react('✅')
