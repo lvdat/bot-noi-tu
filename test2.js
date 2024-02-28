@@ -1,5 +1,5 @@
 const fs = require('fs')
-const { Client, Collection, Intents, GatewayIntentBits } = require('discord.js')
+const { Client, Collection, Intents, GatewayIntentBits, EmbedBuilder, Embed } = require('discord.js')
 const dictionary = require('@vntk/dictionary')
 require('dotenv').config()
 const client = new Client({
@@ -117,8 +117,29 @@ client.on('messageCreate', async message => {
         return
     }
 
+    const wordEmbed = new EmbedBuilder()
+        .addFields(
+            {
+                name: 'Người chơi',
+                value: message.author.displayName
+            },
+            {
+                name: 'Lượt',
+                value: `#${words.length + 1}`,
+                inline: true
+            },
+            {
+                name: 'Từ',
+                value: `${tu}`,
+                inline: true
+            }
+        )
+
     message.react('✅')
-    sendMessageToChannel(`Từ #${words.length + 1}: \`${tu.toLowerCase()}\``)
+    // sendMessageToChannel(`Từ #${words.length + 1}: \`${tu.toLowerCase()}\``)
+    sendMessageToChannel({
+        embeds: [wordEmbed]
+    })
     words.push({
         word: tu,
         player: {
