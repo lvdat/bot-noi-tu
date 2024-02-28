@@ -102,6 +102,16 @@ client.on('messageCreate', async message => {
     let tu = message.content.trim()
     let args1 = tu.split(/ +/)
 
+    if(words.length > 0) {
+        // player can't answer 2 times
+        let lastPlayerId = words[words.length - 1].player.id
+        if (message.author.id === lastPlayerId) {
+            message.react('❌')
+            sendMessageToChannel('Bạn đã trả lời lượt trước rồi, hãy đợi đối thủ!')
+            return
+        }
+    }
+
     // check if words have or more than 1 space
     if (!(args1.length > 1)) {
         message.react('❌')
