@@ -49,6 +49,15 @@ const sendMessageToChannel = (mess) => {
     client.channels.cache.get(GAME_CHANNEL_ID).send(mess)
 }
 
+const isWordExist = (word) => {
+    for (let i = 0; i < words.length; i++) {
+        if (words[i].word === word) {
+            return true;
+        }
+    }
+    return false;
+}
+
 client.on('messageCreate', async message => {
     if (message.author.bot) return // detect if message from BOT.
     if (message.channel.id !== GAME_CHANNEL_ID) return // dectect only from game channel
@@ -64,6 +73,7 @@ client.on('messageCreate', async message => {
         if (isRunning) {
             sendMessageToChannel(`Đã kết thúc lượt này!`)
             isRunning = false
+            words = []
         } else sendMessageToChannel('Trò chơi chưa bắt đầu. Bạn có thể dùng `!start`')
         return
     }
@@ -91,7 +101,8 @@ client.on('messageCreate', async message => {
         return
     }
 
-    if(words.includes(tu)) {
+    if(isWordExist(tu)) {
+        // check used word
         message.react('❌')
         sendMessageToChannel('Từ này đã được sử dụng!')
         return
@@ -99,9 +110,15 @@ client.on('messageCreate', async message => {
 
     message.react('✅')
     sendMessageToChannel(`Từ hiện tại: \`${tu.toLowerCase()}\``)
-    words.push(tu)
+    words.push({
+        word: tu,
+        player: {
+            id: message.author.id,
+            name: message.author.displayName
+        }
+    })
 
-    console.log(`args: ${args.length}`)
+    console.log(`current world: ${JSON.stringify(words)}`)
 
 })
 
