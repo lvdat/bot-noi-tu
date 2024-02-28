@@ -16,6 +16,7 @@ const client = new Client({
 
 //global config
 const GAME_CHANNEL_ID = process.env.GAME_CHANNEL_ID
+let queryCount = 0
 let isRunning = false
 let words = []
 const dicData = dictionary.lower_words
@@ -68,6 +69,7 @@ const checkIfHaveAnswerInDb = (word) => {
         let tempw = dicData[i].split(/ +/)
         if (tempw.length > 1 && tempw[0] === lc && !isWordExist(dicData[i])) {
             // detect word
+            queryCount += i
             return true
         }
     }
@@ -173,7 +175,7 @@ client.on('messageCreate', async message => {
     // sendMessageToChannel(`Từ #${words.length + 1}: \`${tu.toLowerCase()}\``)
     
     if(!checkIfHaveAnswerInDb(tu)) {
-        sendMessageToChannel(`${message.author.displayName} đã chiến thắng sau ${words.length} lượt! Trò chơi kết thúc.`)
+        sendMessageToChannel(`${message.author.displayName} đã chiến thắng sau ${words.length} lượt! Trò chơi kết thúc. CSDL đã truy vấn ${queryCount} lần`)
         isRunning = false
         words = []
         return
