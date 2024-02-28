@@ -109,7 +109,7 @@ client.on('messageCreate', async message => {
     }
 
     message.react('✅')
-    sendMessageToChannel(`Từ hiện tại: \`${tu.toLowerCase()}\``)
+    sendMessageToChannel(`Từ #${words.length + 1}: \`${tu.toLowerCase()}\``)
     words.push({
         word: tu,
         player: {
