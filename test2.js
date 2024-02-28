@@ -3,15 +3,15 @@ const { Client, Collection, Intents, GatewayIntentBits, EmbedBuilder, Embed } = 
 const dictionary = require('@vntk/dictionary')
 require('dotenv').config()
 const client = new Client({
-  // The intents will depend on what you want to do with the robot, 
-  // but don't forget to activate them in your discord.dev dashboard
-  // at the address https://discord.com/developers/applications/{ID}/bot, 
-  // section "Privileged Gateway Intents"
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-  ],
+    // The intents will depend on what you want to do with the robot, 
+    // but don't forget to activate them in your discord.dev dashboard
+    // at the address https://discord.com/developers/applications/{ID}/bot, 
+    // section "Privileged Gateway Intents"
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+    ],
 })
 
 //global config
@@ -26,8 +26,8 @@ const commandFiles = fs
   .filter((file) => file.endsWith('.js'))
 
 for (const file of commandFiles) {
-  const command = require(`./commands/${file}`)
-  client.commands.set(command.data.name, command)
+    const command = require(`./commands/${file}`)
+    client.commands.set(command.data.name, command)
 }
 
 // Events like ready.js (when the robot turns on), 
@@ -37,12 +37,12 @@ const eventFiles = fs
   .filter((file) => file.endsWith('.js'))
 
 for (const file of eventFiles) {
-  const event = require(`./events/${file}`)
-  if (event.once) {
-    client.once(event.name, (...args) => event.execute(...args, client))
-  } else {
-    client.on(event.name, (...args) => event.execute(...args, client))
-  }
+    const event = require(`./events/${file}`)
+    if (event.once) {
+        client.once(event.name, (...args) => event.execute(...args, client))
+    } else {
+        client.on(event.name, (...args) => event.execute(...args, client))
+    }
 }
 
 const sendMessageToChannel = (mess) => {
@@ -154,26 +154,26 @@ client.on('messageCreate', async message => {
 
 // The interactionCreate event directly here, as this is the heart of the robot.
 client.on('interactionCreate', async (interaction) => {
-  if (!interaction.isCommand()) return
-  const command = client.commands.get(interaction.commandName)
-  if (!command) return
+    if (!interaction.isCommand()) return
+    const command = client.commands.get(interaction.commandName)
+    if (!command) return
 
-  // We log when a user makes a command
-  try {
-    await console.log(
-      `/${interaction.commandName} — Par ${interaction.user.username}`
-    )
-    await command.execute(interaction, client)
-    // But if there is a mistake, 
-    // then we log that and send an error message only to the person (ephemeral: true)
-  } catch (error) {
-    console.error(error)
-    return interaction.reply({
-      content: "An error occurred while executing this command!",
-      ephemeral: true,
-      fetchReply: true
-    })
-  }
+    // We log when a user makes a command
+    try {
+        await console.log(
+            `/${interaction.commandName} — Par ${interaction.user.username}`
+        )
+        await command.execute(interaction, client)
+        // But if there is a mistake, 
+        // then we log that and send an error message only to the person (ephemeral: true)
+    } catch (error) {
+        console.error(error)
+        return interaction.reply({
+            content: "An error occurred while executing this command!",
+            ephemeral: true,
+            fetchReply: true
+        })
+    }
 })
 
 // The token of your robot to be inserted
