@@ -8,7 +8,7 @@ module.exports = async (client, commands, options = { debug: false, guildId: nul
       : new Promise((resolve) => client.once('ready', resolve))
     await ready
     const currentCommands = await client.application.commands.fetch(
-      options.guildId && { guildId: options.guildId }
+        options.guildId && { guildId: options.guildId }
     )
   
     log(`Synchronizing commands...`)
@@ -27,33 +27,33 @@ module.exports = async (client, commands, options = { debug: false, guildId: nul
       .filter((command) => !commands.some((c) => c.name === command.name))
       .toJSON()
     for (const deletedCommand of deletedCommands) {
-      await deletedCommand.delete()
+        await deletedCommand.delete()
     }
   
     log(`Deleted ${deletedCommands.length} commands!`)
   
     const updatedCommands = commands.filter((command) =>
-      currentCommands.some((c) => c.name === command.name)
+        currentCommands.some((c) => c.name === command.name)
     )
     let updatedCommandCount = 0
     for (const updatedCommand of updatedCommands) {
-      const newCommand = updatedCommand
-      const previousCommand = currentCommands.find(
-        (c) => c.name === updatedCommand.name
-      )
-      let modified = false
-      if (previousCommand.description !== newCommand.description) modified = true
-      if (
-        !Discord.ApplicationCommand.optionsEqual(
-          previousCommand.options ?? [],
-          newCommand.options ?? []
+        const newCommand = updatedCommand
+        const previousCommand = currentCommands.find(
+            (c) => c.name === updatedCommand.name
         )
-      )
-        modified = true
-      if (modified) {
-        await previousCommand.edit(newCommand)
-        updatedCommandCount++
-      }
+        let modified = false
+        if (previousCommand.description !== newCommand.description) modified = true
+        if (
+            !Discord.ApplicationCommand.optionsEqual(
+            previousCommand.options ?? [],
+            newCommand.options ?? []
+            )
+        )
+            modified = true
+        if (modified) {
+            await previousCommand.edit(newCommand)
+            updatedCommandCount++
+        }
     }
   
     log(`Updated ${updatedCommandCount} commands!`)
@@ -61,9 +61,9 @@ module.exports = async (client, commands, options = { debug: false, guildId: nul
     log(`Commands synchronized!`)
   
     return {
-      currentCommandCount: currentCommands.size,
-      newCommandCount: newCommands.length,
-      deletedCommandCount: deletedCommands.length,
-      updatedCommandCount
+        currentCommandCount: currentCommands.size,
+        newCommandCount: newCommands.length,
+        deletedCommandCount: deletedCommands.length,
+        updatedCommandCount
     }
   }
