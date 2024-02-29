@@ -101,7 +101,7 @@ client.on('messageCreate', async message => {
         sendMessageToChannel('Trò chơi chưa bắt đầu. Bạn có thể dùng `!start`')
         return
     }
-    let tu = message.content.trim()
+    let tu = message.content.trim().toLowerCase()
     let args1 = tu.split(/ +/)
 
     if(words.length > 0) {
@@ -181,9 +181,9 @@ client.on('messageCreate', async message => {
         return
     }
     
-    sendMessageToChannel({
-        embeds: [wordEmbed]
-    })
+    //sendMessageToChannel({
+    //    embeds: [wordEmbed]
+    //})
 
     console.log(`current words array: ${JSON.stringify(words)}`)
 
