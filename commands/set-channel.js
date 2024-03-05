@@ -3,14 +3,6 @@ const fs = require('fs')
 const dataChannel = require('../data/data.json')
 const path = require('path')
 
-// console.log(dataChannel['1212461534861729792'] === undefined)
-// console.log(dataChannel['12124615348617297923'] === undefined)
-// dataChannel['12124615348617297923'] = {
-//     channel: '12345678'
-// }
-// fs.writeFileSync('../data/data.json', JSON.stringify(dataChannel))
-// console.log(dataChannel['12124615348617297923'] === undefined)
-
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('set-channel')
@@ -55,15 +47,6 @@ module.exports = {
                 return
             }
 
-
-            // check guild data exist logic
-
-            // if (dataChannel[interaction.guildId] === undefined) {
-
-            // } else {
-
-            // }
-
             dataChannel[interaction.guildId] = {
                 channel: channel.id
             }
@@ -75,12 +58,6 @@ module.exports = {
             })
 
             return
-
-            // console.log(channel)
-            // await interaction.reply({
-            //     content: 'a',
-            //     ephemeral: true
-            // })
         }
     }
 }
