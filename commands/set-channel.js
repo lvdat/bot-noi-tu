@@ -18,5 +18,15 @@ module.exports = {
             option.setName('channel')
                 .setDescription('Kênh chơi nối từ')
                 .addChannelTypes(ChannelType.GuildText)
-                .setRequired(true))
+                .setRequired(true)),
+    async execute (interaction) {
+        if(interaction.member.permissions.has('ADMINISTRATOR')) {
+            await interaction.reply({
+                content: 'Bạn cần có quyền Admin để thực hiện thao tác này!',
+                ephemeral: true
+            })
+        } else {
+            
+        }
+    }
 }
