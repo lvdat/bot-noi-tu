@@ -6,6 +6,8 @@ require('dotenv').config()
 const dataChannel = require('./data/data.json')
 const wordDataChannel = require('./data/word-data.json')
 
+const wordDataPath = path.resolve(__dirname, './data/word-data.json')
+
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -77,6 +79,9 @@ client.on('messageCreate', async message => {
         // detect channel not config
         return
     }
+
+    
+
 })
 
 // END LOGIC GAME
