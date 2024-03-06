@@ -62,7 +62,7 @@ const checkIfHaveAnswerInDb = (word) => {
     let lc = w[w.length - 1]
     for (let i = 0; i < dicData.length; i++) {
         let tempw = dicData[i].split(/ +/)
-        if (tempw.length > 1 && tempw[0] === lc && !isWordExist(dicData[i])) {
+        if (tempw.length > 1 && tempw[0] === lc) {
             // detect word
             queryCount += i
             return true
@@ -91,20 +91,10 @@ const stopGame = (channel) => {
 const initWordData = (channel) => {
     wordDataChannel[channel] = {
         running: false,
-        currentPlayer: "",
-        words: [],
-        query: 0
+        currentPlayer: {},
+        words: []
     }
     fs.writeFileSync(wordDataPath, JSON.stringify(wordDataChannel))
-}
-
-const isWordExist = (word, words) => {
-    for (let i = 0; i < words.length; i++) {
-        if (words[i] === word) {
-            return true
-        }
-    }
-    return false
 }
 // end function
 
@@ -151,7 +141,7 @@ client.on('messageCreate', async message => {
     let currentWordData = wordDataChannel[configChannel]
     let tu = message.content.trim().toLowerCase()
     let args1 = tu.split(/ +/)
-    let words = currentWordData.words
+    let words = wordDataChannel[configChannel].words
 
     if(words.length > 0) {
         // player can't answer 2 times
@@ -170,13 +160,6 @@ client.on('messageCreate', async message => {
         return
     }
 
-    if(isWordExist(tu, words)) {
-        // check used word
-        message.react('❌')
-        sendMessageToChannel('Từ này đã được sử dụng!', configChannel)
-        return
-    }
-
     if (words.length > 0) {
         const lastWord = words[words.length - 1]
         const args2 = lastWord.split(/ +/)
@@ -185,6 +168,14 @@ client.on('messageCreate', async message => {
             sendMessageToChannel('Từ này không bắt đầu với tiếng `' + args2[args2.length - 1] + '`', configChannel)
             return
         }
+    }
+
+    for (let i = 0; i < words.length; i++) {
+        if (words[i] === tu) {
+            message.react('❌')
+            sendMessageToChannel('Từ này đã được sử dụng!', configChannel)
+        }
+        return
     }
 
     if(!dictionary.has(tu)) {
@@ -211,7 +202,7 @@ client.on('messageCreate', async message => {
         return
     }
 
-    fs.writeFile(queryDataPath, queryCount)
+    fs.writeFileSync(queryDataPath, queryCount)
 
 })
 
