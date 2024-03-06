@@ -158,7 +158,7 @@ client.on('messageCreate', async message => {
         let lastPlayerId = currentWordData.currentPlayer
         if (message.author.id === lastPlayerId) {
             message.react('❌')
-            sendMessageToChannel('Bạn đã trả lời lượt trước rồi, hãy đợi đối thủ!')
+            sendMessageToChannel('Bạn đã trả lời lượt trước rồi, hãy đợi đối thủ!', configChannel)
             return
         }
     }
@@ -166,14 +166,14 @@ client.on('messageCreate', async message => {
     // check if words have or more than 1 space
     if (!(args1.length > 1)) {
         message.react('❌')
-        sendMessageToChannel('Vui lòng nhập từ có chứa nhiều hơn 2 tiếng!')
+        sendMessageToChannel('Vui lòng nhập từ có chứa nhiều hơn 2 tiếng!', configChannel)
         return
     }
 
     if(isWordExist(tu, words)) {
         // check used word
         message.react('❌')
-        sendMessageToChannel('Từ này đã được sử dụng!')
+        sendMessageToChannel('Từ này đã được sử dụng!', configChannel)
         return
     }
 
