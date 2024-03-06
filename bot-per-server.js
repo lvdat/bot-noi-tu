@@ -7,6 +7,7 @@ const dataChannel = require('./data/data.json')
 const wordDataChannel = require('./data/word-data.json')
 
 const wordDataPath = path.resolve(__dirname, './data/word-data.json')
+const queryDataPath = path.resolve(__dirname, './query.txt')
 
 const client = new Client({
     intents: [
@@ -18,6 +19,11 @@ const client = new Client({
 
 // load word data
 const dicData = dictionary.lower_words
+
+// global config
+const START_COMMAND = '!start'
+const STOP_COMMAND = '!stop'
+let queryCount = 0
 
 // We create a collection for commands
 client.commands = new Collection()
@@ -65,6 +71,41 @@ const checkIfHaveAnswerInDb = (word) => {
     return false
 }
 
+const isWordDataExist = (channel) => {
+    return wordDataChannel[channel] !== undefined
+}
+
+const isGameRunning = (channel) => {
+    return isWordDataExist(channel) && wordDataChannel[channel].running === true
+}
+
+const startGame = (channel) => {
+    wordDataChannel[channel].running = true
+    fs.writeFileSync(wordDataPath, wordDataChannel)
+}
+const stopGame = (channel) => {
+    wordDataChannel[channel].running = false
+    fs.writeFileSync(wordDataPath, wordDataChannel)
+}
+
+const initWordData = (channel) => {
+    wordDataChannel[channel] = {
+        running: false,
+        currentPlayer: "",
+        words: [],
+        query: 0
+    }
+    fs.writeFileSync(wordDataPath, wordDataChannel)
+}
+
+const isWordExist = (word, words) => {
+    for (let i = 0; i < words.length; i++) {
+        if (words[i] === word) {
+            return true
+        }
+    }
+    return false
+}
 // end function
 
 // LOGIC GAME
@@ -79,8 +120,94 @@ client.on('messageCreate', async message => {
         // detect channel not config
         return
     }
-
+    let configChannel = dataChannel[guild.id].channel
     
+    if(!isWordDataExist(configChannel)) {
+        initWordData(configChannel)
+    }
+
+    let isRunning = isGameRunning(configChannel)
+
+    if (message.content === START_COMMAND) {
+        if (!isRunning) {
+            sendMessageToChannel(`Trò chơi đã bắt đầu, ai đó hãy bắt đầu với một từ nào!`, configChannel)
+            startGame(configChannel)
+        } else sendMessageToChannel('Trò chơi vẫn đang tiếp tục. Bạn có thể dùng `!stop`', configChannel)
+        return
+    } else if (message.content === STOP_COMMAND) {
+        if (isRunning) {
+            sendMessageToChannel(`Đã kết thúc lượt này!`, configChannel)
+            initWordData(configChannel)
+        } else sendMessageToChannel('Trò chơi chưa bắt đầu. Bạn có thể dùng `!start`', configChannel)
+        return
+    }
+
+    if (!isRunning) {
+        // check if game is running
+        sendMessageToChannel('Trò chơi chưa bắt đầu. Bạn có thể dùng `!start`', configChannel)
+        return
+    }
+
+    let currentWordData = wordDataChannel[configChannel]
+    let tu = message.content.trim().toLowerCase()
+    let args1 = tu.split(/ +/)
+    let words = currentWordData.words
+
+    if(words.length > 0) {
+        // player can't answer 2 times
+        let lastPlayerId = currentWordData.currentPlayer
+        if (message.author.id === lastPlayerId) {
+            message.react('❌')
+            sendMessageToChannel('Bạn đã trả lời lượt trước rồi, hãy đợi đối thủ!')
+            return
+        }
+    }
+
+    // check if words have or more than 1 space
+    if (!(args1.length > 1)) {
+        message.react('❌')
+        sendMessageToChannel('Vui lòng nhập từ có chứa nhiều hơn 2 tiếng!')
+        return
+    }
+
+    if(isWordExist(tu, words)) {
+        // check used word
+        message.react('❌')
+        sendMessageToChannel('Từ này đã được sử dụng!')
+        return
+    }
+
+    if (words.length > 0) {
+        const lastWord = words[words.length - 1]
+        const args2 = lastWord.split(/ +/)
+        if (!(args1[0] === args2[args2.length - 1])) {
+            message.react('❌')
+            sendMessageToChannel('Từ này không bắt đầu với tiếng `' + args2[args2.length - 1] + '`', configChannel)
+            return
+        }
+    }
+
+    if(!dictionary.has(tu)) {
+        // check in dictionary
+        message.react('❌')
+        sendMessageToChannel('Từ này không có trong từ điển tiếng Việt!', configChannel)
+        return
+    }
+
+    words.push(tu)
+    wordDataChannel[configChannel].words = words
+    wordDataChannel[configChannel].currentPlayer.id = message.author.id
+    wordDataChannel[configChannel].currentPlayer.name = message.author.displayName
+
+    message.react('✅')
+
+    console.log(`[${configChannel}] - #${words.length} - ${tu}`)
+
+    if(!checkIfHaveAnswerInDb(tu)) {
+        sendMessageToChannel(`${message.author.displayName} đã chiến thắng sau ${words.length} lượt! Trò chơi kết thúc`, configChannel)
+        initWordData(configChannel)
+        return
+    }
 
 })
 
