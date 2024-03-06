@@ -81,11 +81,11 @@ const isGameRunning = (channel) => {
 
 const startGame = (channel) => {
     wordDataChannel[channel].running = true
-    fs.writeFileSync(wordDataPath, wordDataChannel)
+    fs.writeFileSync(wordDataPath, JSON.stringify(wordDataChannel))
 }
 const stopGame = (channel) => {
     wordDataChannel[channel].running = false
-    fs.writeFileSync(wordDataPath, wordDataChannel)
+    fs.writeFileSync(wordDataPath, JSON.stringify(wordDataChannel))
 }
 
 const initWordData = (channel) => {
@@ -95,7 +95,7 @@ const initWordData = (channel) => {
         words: [],
         query: 0
     }
-    fs.writeFileSync(wordDataPath, wordDataChannel)
+    fs.writeFileSync(wordDataPath, JSON.stringify(wordDataChannel))
 }
 
 const isWordExist = (word, words) => {
@@ -116,7 +116,7 @@ client.on('messageCreate', async message => {
     let guild = message.guild
     let channel = message.channel
 
-    if(dataChannel[guild.id] !== undefined && dataChannel[guild.id].channel !== undefined) {
+    if(dataChannel[guild.id] === undefined || dataChannel[guild.id].channel === undefined) {
         // detect channel not config
         return
     }
@@ -198,6 +198,8 @@ client.on('messageCreate', async message => {
     wordDataChannel[configChannel].words = words
     wordDataChannel[configChannel].currentPlayer.id = message.author.id
     wordDataChannel[configChannel].currentPlayer.name = message.author.displayName
+
+    fs.writeFileSync(wordDataPath, JSON.stringify(wordDataChannel))
 
     message.react('✅')
 
