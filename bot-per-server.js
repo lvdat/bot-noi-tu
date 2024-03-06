@@ -209,6 +209,8 @@ client.on('messageCreate', async message => {
         return
     }
 
+    fs.writeFile(queryDataPath, queryCount)
+
 })
 
 // END LOGIC GAME
