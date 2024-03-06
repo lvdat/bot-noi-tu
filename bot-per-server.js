@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const { Client, GatewayIntentBits } = require('discord.js')
+const { Client, GatewayIntentBits, Collection } = require('discord.js')
 const dictionary = require('@vntk/dictionary')
 require('dotenv').config()
 const dataChannel = require('./data/data.json')
