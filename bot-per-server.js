@@ -139,6 +139,8 @@ client.on('messageCreate', async message => {
     }
     let configChannel = dataChannel[guild.id].channel
     
+    if (message.channel.id !== configChannel) return
+
     if(!isWordDataExist(configChannel)) {
         initWordData(configChannel)
     }
