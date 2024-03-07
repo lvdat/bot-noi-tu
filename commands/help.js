@@ -17,7 +17,7 @@ const helpEmbed = () => new EmbedBuilder()
         },
         {
             name: 'Ai có thể dùng lệnh set-channel?',
-            value: 'Chỉ người dùng có quyền **Administrator**'
+            value: 'Người dùng có quyền **MANAGE_CHANNELS**'
         },
         {
             name: 'Ai có thể dùng lệnh !start',
@@ -25,7 +25,7 @@ const helpEmbed = () => new EmbedBuilder()
         },
         {
             name: 'Ai có thể dùng lệnh !stop',
-            value: 'Chỉ người dùng có quyền **Administrator**'
+            value: 'Người dùng có quyền **MANAGE_CHANNELS**'
         },
         {
             name: 'Khi nào trò chơi kết thúc',
