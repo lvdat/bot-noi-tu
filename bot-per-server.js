@@ -174,7 +174,7 @@ client.on('messageCreate', async message => {
 
     if(words.length > 0) {
         // player can't answer 2 times
-        let lastPlayerId = currentWordData.currentPlayer
+        let lastPlayerId = currentWordData.currentPlayer.id
         if (message.author.id === lastPlayerId) {
             message.react('❌')
             sendMessageToChannel('Bạn đã trả lời lượt trước rồi, hãy đợi đối thủ!', configChannel)
