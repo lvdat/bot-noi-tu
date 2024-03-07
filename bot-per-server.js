@@ -231,7 +231,7 @@ client.on('messageCreate', async message => {
         return
     }
 
-    fs.writeFileSync(queryDataPath, queryCount)
+    fs.writeFileSync(queryDataPath, queryCount.toString())
 
 })
 
