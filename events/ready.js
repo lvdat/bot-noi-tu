@@ -1,5 +1,7 @@
 const synchronizeSlashCommands = require('../modules/sync_commands.js')
 const { ActivityType } = require('discord.js')
+const fs = require('fs')
+const path = require('path')
 module.exports = {
     name: 'ready',
     async execute(client) {

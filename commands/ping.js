@@ -4,7 +4,7 @@ module.exports = {
     // this is what we will find when we type /ping
     data: {
         name: 'ping',
-        description: 'Get the ping from the robot',
+        description: 'Kiểm tra ping của bot',
         options: []
     },
     // and all this is the logic of the order
@@ -12,7 +12,7 @@ module.exports = {
         // For example here we create an embed with EmbedBuilder from discord.js
         // We add a name and iconURL to it, and then modify it with the values.
         const PingBeforeEmbed = new EmbedBuilder().setAuthor({
-            name: `The bird will come back with the bot ping...`,
+            name: `Đang kiểm tra ping...`,
             iconURL: client.user.avatarURL()
         })
         const sent = await interaction.reply({
@@ -23,12 +23,12 @@ module.exports = {
         const TotalPing = sent.createdTimestamp - interaction.createdTimestamp
         const PingEmbed = new EmbedBuilder()
         .setAuthor({
-            name: `Ping of ${client.user.username}`,
+            name: `Ping của ${client.user.username}`,
             iconURL: client.user.avatarURL()
         })
         .addFields(
             {
-                name: 'Total ping',
+                name: 'Ping',
                 value: `${TotalPing}ms`,
                 inline: true
             },

@@ -1,5 +1,5 @@
 const fs = require('fs')
-const { Client, Collection, Intents, GatewayIntentBits, EmbedBuilder, Embed } = require('discord.js')
+const { Client, Collection, GatewayIntentBits, EmbedBuilder, Embed } = require('discord.js')
 const dictionary = require('@vntk/dictionary')
 require('dotenv').config()
 const client = new Client({
