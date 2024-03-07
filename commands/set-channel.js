@@ -54,7 +54,8 @@ module.exports = {
             fs.writeFileSync(path.resolve(__dirname, '../data/data.json'), JSON.stringify(dataChannel))
 
             await interaction.reply({
-                content: `Bạn đã chọn kênh **${channel.name}** làm kênh chơi nối từ của máy chủ **${interaction.member.guild.name}**!`
+                content: `Bạn đã chọn kênh **${channel.name}** làm kênh chơi nối từ của máy chủ **${interaction.member.guild.name}**!`,
+                flags: [4096]
             })
 
             return
