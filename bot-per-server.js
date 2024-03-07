@@ -84,7 +84,10 @@ client.on('messageCreate', async message => {
     // function
 
     const sendMessageToChannel = (msg, channel_id) => {
-        client.channels.cache.get(channel_id).send(msg)
+        client.channels.cache.get(channel_id).send({
+            content: msg,
+            flags: [4096]
+        })
     }
 
     const checkIfHaveAnswerInDb = (word) => {
