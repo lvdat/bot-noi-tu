@@ -157,6 +157,15 @@ client.on('messageCreate', async message => {
         } else sendMessageToChannel('Trò chơi vẫn đang tiếp tục. Bạn có thể dùng `!stop`', configChannel)
         return
     } else if (message.content === STOP_COMMAND) {
+
+        if(!message.member.permissions.has('MANAGE_CHANNELS')) {
+            message.reply({
+                content: 'Bạn không có quyền dùng lệnh này',
+                ephemeral: true
+            })
+            return
+        }
+
         if (isRunning) {
             sendMessageToChannel(`Đã kết thúc lượt này!`, configChannel)
             initWordData(configChannel)
