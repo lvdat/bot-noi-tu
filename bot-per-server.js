@@ -3,11 +3,32 @@ const path = require('path')
 const { Client, GatewayIntentBits, Collection } = require('discord.js')
 const dictionary = require('@vntk/dictionary')
 require('dotenv').config()
-const dataChannel = require('./data/data.json')
-const wordDataChannel = require('./data/word-data.json')
 
+const emptyData = {}
+const dataPath = path.resolve(__dirname, './data/data.json')
 const wordDataPath = path.resolve(__dirname, './data/word-data.json')
-const queryDataPath = path.resolve(__dirname, './query.txt')
+const queryPath = path.resolve(__dirname, './query.txt')
+
+if (!fs.existsSync(dataPath)) {
+    console.log(`[WARNING] File data.json doesn't exist. Creating...`)
+    fs.writeFileSync(dataPath, JSON.stringify(emptyData))
+} else {
+    console.log(`[OK] File data.json exist.`)
+}
+
+if (!fs.existsSync(wordDataPath)) {
+    console.log(`[WARNING] File word-data.json doesn't exist. Creating...`)
+    fs.writeFileSync(wordDataPath, JSON.stringify(emptyData))
+} else {
+    console.log(`[OK] File word-data.json exist.`)
+}
+
+if (!fs.existsSync(queryPath)) {
+    console.log(`[WARNING] File query.txt doesn't exist. Creating...`)
+    fs.writeFileSync(queryPath, '0')
+} else {
+    console.log(`[OK] File query.txt exist.`)
+}
 
 const client = new Client({
     intents: [
@@ -51,56 +72,62 @@ for (const file of eventFiles) {
     }
 }
 
-// function
-
-const sendMessageToChannel = (msg, channel_id) => {
-    client.channels.cache.get(channel_id).send(msg)
-}
-
-const checkIfHaveAnswerInDb = (word) => {
-    let w = word.split(/ +/)
-    let lc = w[w.length - 1]
-    for (let i = 0; i < dicData.length; i++) {
-        let tempw = dicData[i].split(/ +/)
-        if (tempw.length > 1 && tempw[0] === lc) {
-            // detect word
-            queryCount += i
-            return true
-        }
-    }
-    return false
-}
-
-const isWordDataExist = (channel) => {
-    return wordDataChannel[channel] !== undefined
-}
-
-const isGameRunning = (channel) => {
-    return isWordDataExist(channel) && wordDataChannel[channel].running === true
-}
-
-const startGame = (channel) => {
-    wordDataChannel[channel].running = true
-    fs.writeFileSync(wordDataPath, JSON.stringify(wordDataChannel))
-}
-const stopGame = (channel) => {
-    wordDataChannel[channel].running = false
-    fs.writeFileSync(wordDataPath, JSON.stringify(wordDataChannel))
-}
-
-const initWordData = (channel) => {
-    wordDataChannel[channel] = {
-        running: false,
-        currentPlayer: {},
-        words: []
-    }
-    fs.writeFileSync(wordDataPath, JSON.stringify(wordDataChannel))
-}
-// end function
-
 // LOGIC GAME
 
 client.on('messageCreate', async message => {
+    const dataChannel = require('./data/data.json')
+    const wordDataChannel = require('./data/word-data.json')
+
+    const wordDataPath = path.resolve(__dirname, './data/word-data.json')
+    const queryDataPath = path.resolve(__dirname, './query.txt')
+
+    // function
+
+    const sendMessageToChannel = (msg, channel_id) => {
+        client.channels.cache.get(channel_id).send(msg)
+    }
+
+    const checkIfHaveAnswerInDb = (word) => {
+        let w = word.split(/ +/)
+        let lc = w[w.length - 1]
+        for (let i = 0; i < dicData.length; i++) {
+            let tempw = dicData[i].split(/ +/)
+            if (tempw.length > 1 && tempw[0] === lc) {
+                // detect word
+                queryCount += i
+                return true
+            }
+        }
+        return false
+    }
+
+    const isWordDataExist = (channel) => {
+        return wordDataChannel[channel] !== undefined
+    }
+
+    const isGameRunning = (channel) => {
+        return isWordDataExist(channel) && wordDataChannel[channel].running === true
+    }
+
+    const startGame = (channel) => {
+        wordDataChannel[channel].running = true
+        fs.writeFileSync(wordDataPath, JSON.stringify(wordDataChannel))
+    }
+    const stopGame = (channel) => {
+        wordDataChannel[channel].running = false
+        fs.writeFileSync(wordDataPath, JSON.stringify(wordDataChannel))
+    }
+
+    const initWordData = (channel) => {
+        wordDataChannel[channel] = {
+            running: false,
+            currentPlayer: {},
+            words: []
+        }
+        fs.writeFileSync(wordDataPath, JSON.stringify(wordDataChannel))
+    }
+    // end function
+
     if(message.author.bot) return // detect mess from BOT
 
     let guild = message.guild
