@@ -199,12 +199,12 @@ client.on('messageCreate', async message => {
         }
     }
 
-    for (let i = 0; i < words.length; i++) {
-        if (words[i] === tu) {
+    for (let j = 0; j < words.length; j++) {
+        if (words[j] === tu) {
             message.react('❌')
             sendMessageToChannel('Từ này đã được sử dụng!', configChannel)
+            return
         }
-        return
     }
 
     if(!dictionary.has(tu)) {
@@ -213,6 +213,7 @@ client.on('messageCreate', async message => {
         sendMessageToChannel('Từ này không có trong từ điển tiếng Việt!', configChannel)
         return
     }
+
 
     words.push(tu)
     wordDataChannel[configChannel].words = words
@@ -232,7 +233,7 @@ client.on('messageCreate', async message => {
     }
 
     fs.writeFileSync(queryDataPath, queryCount.toString())
-
+    return
 })
 
 // END LOGIC GAME
