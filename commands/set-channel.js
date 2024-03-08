@@ -23,7 +23,7 @@ module.exports = {
             let channel = interaction.options.getChannel('channel')
 
             // check send permission for bot
-            if (!interaction.member.permissionsIn(channel).has('VIEW_CHANNEL')) {
+            if (!interaction.member.permissionsIn(channel).has(PermissionsBitField.Flags.ViewChannel)) {
                 await interaction.reply({
                     content: 'Tôi không có quyền xem kênh này!',
                     ephemeral: true
@@ -31,7 +31,7 @@ module.exports = {
                 return
             }
 
-            if (!interaction.member.permissionsIn(channel).has('SEND_MESSAGES')) {
+            if (!interaction.member.permissionsIn(channel).has(PermissionsBitField.Flags.SendMessages)) {
                 await interaction.reply({
                     content: 'Tôi không có quyền gửi tin nhắn ở kênh này!',
                     ephemeral: true
@@ -39,7 +39,7 @@ module.exports = {
                 return
             }
 
-            if (!interaction.member.permissionsIn(channel).has('ADD_REACTIONS')) {
+            if (!interaction.member.permissionsIn(channel).has(PermissionsBitField.Flags.AddReactions)) {
                 await interaction.reply({
                     content: 'Tôi không có quyền thả cảm xúc vào tin nhắn ở kênh này!',
                     ephemeral: true
