@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ChannelType } = require('discord.js');
+const { SlashCommandBuilder, ChannelType, PermissionsBitField } = require('discord.js');
 const fs = require('fs')
 const dataChannel = require('../data/data.json')
 const path = require('path')
@@ -13,7 +13,7 @@ module.exports = {
                 .addChannelTypes(ChannelType.GuildText)
                 .setRequired(true)),
     async execute (interaction) {
-        if(!interaction.member.permissions.has('MANAGE_CHANNELS')) {
+        if(!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
             await interaction.reply({
                 content: 'Bạn cần có quyền Admin để thực hiện thao tác này!',
                 ephemeral: true

@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const { Client, GatewayIntentBits, Collection } = require('discord.js')
+const { Client, GatewayIntentBits, Collection, PermissionsBitField } = require('discord.js')
 const dictionary = require('@vntk/dictionary')
 require('dotenv').config()
 
@@ -158,7 +158,7 @@ client.on('messageCreate', async message => {
         return
     } else if (message.content === STOP_COMMAND) {
 
-        if(!message.member.permissions.has('MANAGE_CHANNELS')) {
+        if(!message.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
             message.reply({
                 content: 'Bạn không có quyền dùng lệnh này',
                 ephemeral: true
