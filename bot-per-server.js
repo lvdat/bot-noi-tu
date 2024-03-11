@@ -222,7 +222,7 @@ client.on('messageCreate', async message => {
     if(!dictionary.has(tu)) {
         // check in dictionary
         message.react('❌')
-        sendMessageToChannel('Từ này không có trong từ điển tiếng Việt!', configChannel)
+        // sendMessageToChannel('Từ này không có trong từ điển tiếng Việt!', configChannel)
         return
     }
 
