@@ -2,12 +2,15 @@ const fs = require('fs')
 const path = require('path')
 const { Client, GatewayIntentBits, Collection, PermissionsBitField } = require('discord.js')
 const dictionary = require('@vntk/dictionary')
+const axios = require('axios')
 require('dotenv').config()
 
 const emptyData = {}
 const dataPath = path.resolve(__dirname, './data/data.json')
 const wordDataPath = path.resolve(__dirname, './data/word-data.json')
 const queryPath = path.resolve(__dirname, './query.txt')
+const wordDataUrl = 'https://github.com/undertheseanlp/dictionary/raw/master/dictionary/words.txt'
+const wordDatabasePath = path.resolve(__dirname, './data/words.txt')
 
 if (!fs.existsSync(dataPath)) {
     console.log(`[WARNING] File data.json doesn't exist. Creating...`)
@@ -38,8 +41,62 @@ const client = new Client({
     ]
 })
 
+let dicData = []
+
 // load word data
-const dicData = dictionary.lower_words
+if (!fs.existsSync(wordDatabasePath)) {
+    console.log('[WARNING] Downloading words database from Github...')
+    // load dictionary from Github repo
+    axios.get(wordDataUrl)
+        .then(async res => {
+            const lines = res.data.trim().split('\n')
+            const wordsdb = lines.map(line => JSON.parse(line).text)
+            fs.writeFileSync(wordDatabasePath, wordsdb.join('\n'))
+            console.log('[OK] Saved words database to ' + wordDatabasePath)
+
+            await continueExecution()
+        })
+        .catch(err => {
+            console.log('[ERROR] Error when download data: ' + err.message)
+            return
+        })
+} else {
+    continueExecution()
+}
+
+async function continueExecution() {
+    console.log('[WARNING] Loading words...')
+    fs.readFile(wordDatabasePath, 'utf-8', (err, data) => {
+        if(err) {
+            console.log('[ERROR] Error when load words:', err)
+            return
+        }
+        const tempWord = data.toLowerCase().split('\n')
+        console.log(`[OK] Loaded ${tempWord.length} words. Normalizing...`)
+        global.dicData = tempWord.filter(w => w.split(' ').length >= 2 && !w.includes('-') && !w.includes('(') && !w.includes(')'))
+        console.log(`[OK] Normalized words. ${global.dicData.length} words remaining.`)
+        console.log(global.dicData)
+    })
+}
+
+// console.log('[WARNING] Loading words...')
+// let dicData = []
+// fs.readFile(wordDatabasePath, 'utf-8', (err, data) => {
+//     if(err) {
+//         console.log('[ERROR] Error when load words:', err)
+//         return
+//     }
+//     const tempWord = data.toLowerCase().split('\n')
+//     console.log(`[OK] Loaded ${tempWord.length} words. Normalizing...`)
+//     dicData = tempWord.filter(w => w.split(' ').length >= 2 && !w.includes('-'))
+//     console.log(`[OK] Normalized words. ${dicData.length} words remaining.`)
+// })
+
+const checkDict = (word) => {
+    return global.dicData.includes(word.toLowerCase())
+}
+
+//const dicData = dictionary.lower_words
 
 // global config
 const START_COMMAND = '!start'
@@ -90,8 +147,8 @@ client.on('messageCreate', async message => {
     const checkIfHaveAnswerInDb = (word) => {
         let w = word.split(/ +/)
         let lc = w[w.length - 1]
-        for (let i = 0; i < dicData.length; i++) {
-            let tempw = dicData[i].split(/ +/)
+        for (let i = 0; i < global.length; i++) {
+            let tempw = global.dicData[i].split(/ +/)
             if (tempw.length > 1 && tempw[0] === lc) {
                 // detect word
                 queryCount += i
@@ -216,7 +273,7 @@ client.on('messageCreate', async message => {
         }
     }
 
-    if(!dictionary.has(tu)) {
+    if(!checkDict(tu)) {
         // check in dictionary
         message.react('❌')
         // sendMessageToChannel('Từ này không có trong từ điển tiếng Việt!', configChannel)
