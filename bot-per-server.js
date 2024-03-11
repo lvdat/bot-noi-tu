@@ -79,24 +79,9 @@ async function continueExecution() {
     })
 }
 
-// console.log('[WARNING] Loading words...')
-// let dicData = []
-// fs.readFile(wordDatabasePath, 'utf-8', (err, data) => {
-//     if(err) {
-//         console.log('[ERROR] Error when load words:', err)
-//         return
-//     }
-//     const tempWord = data.toLowerCase().split('\n')
-//     console.log(`[OK] Loaded ${tempWord.length} words. Normalizing...`)
-//     dicData = tempWord.filter(w => w.split(' ').length >= 2 && !w.includes('-'))
-//     console.log(`[OK] Normalized words. ${dicData.length} words remaining.`)
-// })
-
 const checkDict = (word) => {
     return global.dicData.includes(word.toLowerCase())
 }
-
-//const dicData = dictionary.lower_words
 
 // global config
 const START_COMMAND = '!start'
@@ -136,7 +121,6 @@ client.on('messageCreate', async message => {
     const wordDataChannel = require(wordDataPath)
 
     // function
-
     const sendMessageToChannel = (msg, channel_id) => {
         client.channels.cache.get(channel_id).send({
             content: msg,
