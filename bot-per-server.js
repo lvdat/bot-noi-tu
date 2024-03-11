@@ -1,7 +1,6 @@
 const fs = require('fs')
 const path = require('path')
 const { Client, GatewayIntentBits, Collection, PermissionsBitField } = require('discord.js')
-const dictionary = require('@vntk/dictionary')
 const axios = require('axios')
 require('dotenv').config()
 
