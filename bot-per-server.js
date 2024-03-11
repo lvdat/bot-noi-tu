@@ -75,11 +75,8 @@ for (const file of eventFiles) {
 // LOGIC GAME
 
 client.on('messageCreate', async message => {
-    const dataChannel = require('./data/data.json')
-    const wordDataChannel = require('./data/word-data.json')
-
-    const wordDataPath = path.resolve(__dirname, './data/word-data.json')
-    const queryDataPath = path.resolve(__dirname, './query.txt')
+    const dataChannel = require(dataPath)
+    const wordDataChannel = require(wordDataPath)
 
     // function
 
@@ -244,7 +241,7 @@ client.on('messageCreate', async message => {
         return
     }
 
-    fs.writeFileSync(queryDataPath, queryCount.toString())
+    fs.writeFileSync(queryPath, queryCount.toString())
     return
 })
 

@@ -11,6 +11,7 @@
   "dependencies": {
     "@discordjs/voice": "^0.16.1",
     "@vntk/dictionary": "^1.0.0",
+    "axios": "^1.6.7",
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5",
     "g": "^2.0.1",
