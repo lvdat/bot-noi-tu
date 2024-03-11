@@ -44,7 +44,7 @@ const dicData = dictionary.lower_words
 // global config
 const START_COMMAND = '!start'
 const STOP_COMMAND = '!stop'
-let queryCount = 0
+let queryCount = parseInt(fs.readFileSync(queryPath, 'utf-8'))
 
 // We create a collection for commands
 client.commands = new Collection()
