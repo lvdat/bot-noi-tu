@@ -7,7 +7,7 @@ require('dotenv').config()
 const emptyData = {}
 const dataPath = path.resolve(__dirname, './data/data.json')
 const wordDataPath = path.resolve(__dirname, './data/word-data.json')
-const queryPath = path.resolve(__dirname, './query.txt')
+const queryPath = path.resolve(__dirname, './data/query.txt')
 const wordDataUrl = 'https://github.com/undertheseanlp/dictionary/raw/master/dictionary/words.txt'
 const wordDatabasePath = path.resolve(__dirname, './data/words.txt')
 
