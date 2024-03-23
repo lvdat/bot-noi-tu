@@ -3,6 +3,9 @@ const path = require('path')
 const { Client, GatewayIntentBits, Collection, PermissionsBitField } = require('discord.js')
 const axios = require('axios')
 require('dotenv').config()
+const { generateDependencyReport } = require('@discordjs/voice');
+
+console.log(generateDependencyReport());
 
 const emptyData = {}
 const dataPath = path.resolve(__dirname, './data/data.json')
@@ -44,7 +47,8 @@ const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildVoiceStates
     ]
 })
 
