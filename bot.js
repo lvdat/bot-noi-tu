@@ -10,6 +10,7 @@ const wordDataPath = path.resolve(__dirname, './data/word-data.json')
 const queryPath = path.resolve(__dirname, './data/query.txt')
 const wordDataUrl = 'https://github.com/undertheseanlp/dictionary/raw/master/dictionary/words.txt'
 const wordDatabasePath = path.resolve(__dirname, './data/words.txt')
+const voiceLogPath = path.resolve(__dirname, './data/voice-log.txt')
 
 if (!fs.existsSync(dataPath)) {
     console.log(`[WARNING] File data.json doesn't exist. Creating...`)
@@ -30,6 +31,13 @@ if (!fs.existsSync(queryPath)) {
     fs.writeFileSync(queryPath, '0')
 } else {
     console.log(`[OK] File query.txt exist.`)
+}
+
+if (!fs.existsSync(voiceLogPath)) {
+    console.log(`[WARNING] File voice-log.txt doesn't exist. Creating...`)
+    fs.writeFileSync(voiceLogPath, '')
+} else {
+    console.log(`[OK] File voice-log.txt exist.`)
 }
 
 const client = new Client({
@@ -308,6 +316,16 @@ client.on('interactionCreate', async (interaction) => {
             ephemeral: true,
             fetchReply: true
         })
+    }
+})
+
+client.on('voiceStateUpdate', (oldState, newState) => {
+    if (newState.channel) {
+        console.log(`[${new Date()}] [${newState.guild.name}] [${newState.channel.name}] ${newState.member.user.username} connected`)
+        fs.appendFileSync(voiceLogPath, `[${new Date()}] [${newState.guild.name}] [${newState.channel.name}] ${newState.member.user.username} connected`)
+    } else if (oldState.channel) {
+        console.log(`[${new Date()}] [${oldState.guild.name}] [${oldState.channel.name}] ${oldState.member.user.username} disconnected`)
+        fs.appendFileSync(voiceLogPath, `[${new Date()}] [${oldState.guild.name}] [${oldState.channel.name}] ${oldState.member.user.username} díconnected`)
     }
 })
 
