@@ -4,7 +4,7 @@ const { Client, GatewayIntentBits, Collection, PermissionsBitField } = require('
 const axios = require('axios')
 require('dotenv').config()
 const { generateDependencyReport } = require('@discordjs/voice');
-const moment = require('moment')
+const moment = require('moment-timezone')
 
 console.log(generateDependencyReport());
 
@@ -326,11 +326,11 @@ client.on('interactionCreate', async (interaction) => {
 
 client.on('voiceStateUpdate', (oldState, newState) => {
     if (newState.channel) {
-        console.log(`[${moment().format()}] [${newState.guild.name}] [${newState.channel.name}] ${newState.member.user.username} connected`)
-        fs.appendFileSync(voiceLogPath, `[${moment().format()}] [${newState.guild.name}] [${newState.channel.name}] ${newState.member.user.username} connected`)
+        console.log(`[${moment().tz('Asia/Ho_Chi_Minh').format()}] [${newState.guild.name}] [${newState.channel.name}] ${newState.member.user.username} connected`)
+        fs.appendFileSync(voiceLogPath, `[${moment().tz('Asia/Ho_Chi_Minh').format()}] [${newState.guild.name}] [${newState.channel.name}] ${newState.member.user.username} connected`)
     } else if (oldState.channel) {
-        console.log(`[${moment().format()}] [${oldState.guild.name}] [${oldState.channel.name}] ${oldState.member.user.username} disconnected`)
-        fs.appendFileSync(voiceLogPath, `[${moment().format()}] [${oldState.guild.name}] [${oldState.channel.name}] ${oldState.member.user.username} díconnected`)
+        console.log(`[${moment().tz('Asia/Ho_Chi_Minh').format()}] [${oldState.guild.name}] [${oldState.channel.name}] ${oldState.member.user.username} disconnected`)
+        fs.appendFileSync(voiceLogPath, `[${moment().tz('Asia/Ho_Chi_Minh').format()}] [${oldState.guild.name}] [${oldState.channel.name}] ${oldState.member.user.username} díconnected`)
     }
 })
 
