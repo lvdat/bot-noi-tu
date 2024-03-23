@@ -327,10 +327,10 @@ client.on('interactionCreate', async (interaction) => {
 client.on('voiceStateUpdate', (oldState, newState) => {
     if (newState.channel) {
         console.log(`[${moment().tz('Asia/Ho_Chi_Minh').format()}] [${newState.guild.name}] [${newState.channel.name}] ${newState.member.user.username} connected`)
-        fs.appendFileSync(voiceLogPath, `[${moment().tz('Asia/Ho_Chi_Minh').format()}] [${newState.guild.name}] [${newState.channel.name}] ${newState.member.user.username} connected`)
+        fs.appendFileSync(voiceLogPath, `[${moment().tz('Asia/Ho_Chi_Minh').format()}] [${newState.guild.name}] [${newState.channel.name}] ${newState.member.user.username} connected\n`)
     } else if (oldState.channel) {
         console.log(`[${moment().tz('Asia/Ho_Chi_Minh').format()}] [${oldState.guild.name}] [${oldState.channel.name}] ${oldState.member.user.username} disconnected`)
-        fs.appendFileSync(voiceLogPath, `[${moment().tz('Asia/Ho_Chi_Minh').format()}] [${oldState.guild.name}] [${oldState.channel.name}] ${oldState.member.user.username} díconnected`)
+        fs.appendFileSync(voiceLogPath, `[${moment().tz('Asia/Ho_Chi_Minh').format()}] [${oldState.guild.name}] [${oldState.channel.name}] ${oldState.member.user.username} díconnected\n`)
     }
 })
 
