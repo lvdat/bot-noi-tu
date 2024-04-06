@@ -225,7 +225,7 @@ client.on('messageCreate', async message => {
 
     if (!isRunning) {
         // check if game is running
-        sendMessageToChannel('Trò chơi chưa bắt đầu. Bạn có thể dùng `!start`', configChannel)
+        // sendMessageToChannel('Trò chơi chưa bắt đầu. Bạn có thể dùng `!start`', configChannel)
         return
     }
 
