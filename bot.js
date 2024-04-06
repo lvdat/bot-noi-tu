@@ -143,7 +143,7 @@ client.on('messageCreate', async message => {
     const checkIfHaveAnswerInDb = (word) => {
         let w = word.split(/ +/)
         let lc = w[w.length - 1]
-        for (let i = 0; i < global.length; i++) {
+        for (let i = 0; i < global.dicData.length; i++) {
             let tempw = global.dicData[i].split(/ +/)
             if (tempw.length > 1 && tempw[0] === lc) {
                 // detect word
