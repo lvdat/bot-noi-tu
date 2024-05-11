@@ -16,6 +16,10 @@ const helpEmbed = () => new EmbedBuilder()
             value: 'Dùng lệnh `!stop` trong kênh chơi nối từ'
         },
         {
+            name: 'Xem thống kê của BOT',
+            value: 'Dùng lệnh slash `/stats`'
+        },
+        {
             name: 'Ai có thể dùng lệnh set-channel?',
             value: 'Người dùng có quyền **MANAGE_CHANNELS**'
         },
