@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js')
 const fs = require('fs')
 const path = require('path')
-const statsFile = path.resolve(__dirname, '../data/stats.txt')
+// const statsFile = path.resolve(__dirname, '../data/stats.txt')
 const queryPath = path.resolve(__dirname, '../data/query.txt')
 const wordDatabasePath = path.resolve(__dirname, '../data/words.txt')
 
@@ -27,10 +27,10 @@ const statEmbed = (client) => new EmbedBuilder()
             name: 'Tổng số server đang sử dụng',
             value: `${client.guilds.cache.size} servers`
         },
-        {
-            name: 'Tổng số phiên chơi',
-            value: '...'
-        },
+        // {
+        //     name: 'Tổng số phiên chơi',
+        //     value: '...'
+        // },
         {
             name: 'Tổng số truy vấn dữ liệu',
             value: `${queryNumber}`
