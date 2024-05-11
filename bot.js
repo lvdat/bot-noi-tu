@@ -221,6 +221,8 @@ client.on('messageCreate', async message => {
     let words = wordDataChannel[configChannel].words
 
 
+    // functions load after channel defined
+
     const checkIfWordUsed = (word) => {
         for (let j = 0; j < words.length; j++) {
             if (words[j] === word) {
@@ -248,6 +250,8 @@ client.on('messageCreate', async message => {
         return false
     }
 
+    // end function
+
     if(words.length > 0) {
         // player can't answer 2 times
         let lastPlayerId = currentWordData.currentPlayer.id
@@ -274,14 +278,6 @@ client.on('messageCreate', async message => {
             return
         }
     }
-
-    // for (let j = 0; j < words.length; j++) {
-    //     if (words[j] === tu) {
-    //         message.react('❌')
-    //         sendMessageToChannel('Từ này đã được sử dụng!', configChannel)
-    //         return
-    //     }
-    // }
 
     if (checkIfWordUsed(tu)) {
         message.react('❌')
