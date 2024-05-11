@@ -140,20 +140,6 @@ client.on('messageCreate', async message => {
         })
     }
 
-    const checkIfHaveAnswerInDb = (word) => {
-        let w = word.split(/ +/)
-        let lc = w[w.length - 1]
-        for (let i = 0; i < global.dicData.length; i++) {
-            let tempw = global.dicData[i].split(/ +/)
-            if (tempw.length > 1 && tempw[0] === lc) {
-                // detect word
-                queryCount += i
-                return true
-            }
-        }
-        return false
-    }
-
     const isWordDataExist = (channel) => {
         return wordDataChannel[channel] !== undefined
     }
@@ -233,6 +219,34 @@ client.on('messageCreate', async message => {
     let tu = message.content.trim().toLowerCase()
     let args1 = tu.split(/ +/)
     let words = wordDataChannel[configChannel].words
+
+
+    const checkIfWordUsed = (word) => {
+        for (let j = 0; j < words.length; j++) {
+            if (words[j] === word) {
+                return true
+            }
+        }
+    }
+
+    const checkIfHaveAnswerInDb = (word) => {
+        let w = word.split(/ +/)
+        let lc = w[w.length - 1]
+        for (let i = 0; i < global.dicData.length; i++) {
+            let temp = global.dicData[i]
+            let tempw = temp.split(/ +/)
+            if (tempw.length > 1 && tempw[0] === lc) {
+                // detect word
+                queryCount += i
+                if (checkIfWordUsed(temp)) {
+                    // if word is used, cancel this loop round.
+                    continue
+                }
+                return true
+            }
+        }
+        return false
+    }
 
     if(words.length > 0) {
         // player can't answer 2 times
