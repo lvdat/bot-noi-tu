@@ -275,12 +275,18 @@ client.on('messageCreate', async message => {
         }
     }
 
-    for (let j = 0; j < words.length; j++) {
-        if (words[j] === tu) {
-            message.react('❌')
-            sendMessageToChannel('Từ này đã được sử dụng!', configChannel)
-            return
-        }
+    // for (let j = 0; j < words.length; j++) {
+    //     if (words[j] === tu) {
+    //         message.react('❌')
+    //         sendMessageToChannel('Từ này đã được sử dụng!', configChannel)
+    //         return
+    //     }
+    // }
+
+    if (checkIfWordUsed(tu)) {
+        message.react('❌')
+        sendMessageToChannel('Từ này đã được sử dụng!', configChannel)
+        return
     }
 
     if(!checkDict(tu)) {
