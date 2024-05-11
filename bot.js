@@ -217,9 +217,11 @@ client.on('messageCreate', async message => {
 
     let currentWordData = wordDataChannel[configChannel]
     let tu = message.content.trim().toLowerCase()
-    let args1 = tu.split(/ +/)
+    let args1 = tu.split(/\s+/).filter(Boolean) // split fix for multiple space in word.
+    tu = args1.join(' ') // remake word after split.
     let words = wordDataChannel[configChannel].words
 
+    console.log(args1)
 
     // functions load after channel defined
 
@@ -271,7 +273,7 @@ client.on('messageCreate', async message => {
 
     if (words.length > 0) {
         const lastWord = words[words.length - 1]
-        const args2 = lastWord.split(/ +/)
+        const args2 = lastWord.split(/\s+/).filter(Boolean)
         if (!(args1[0] === args2[args2.length - 1])) {
             message.react('❌')
             sendMessageToChannel('Từ này không bắt đầu với tiếng `' + args2[args2.length - 1] + '`', configChannel)
@@ -288,7 +290,7 @@ client.on('messageCreate', async message => {
     if(!checkDict(tu)) {
         // check in dictionary
         message.react('❌')
-        // sendMessageToChannel('Từ này không có trong từ điển tiếng Việt!', configChannel)
+        sendMessageToChannel('Từ này không có trong từ điển tiếng Việt!', configChannel)
         return
     }
 
