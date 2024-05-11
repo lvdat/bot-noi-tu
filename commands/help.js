@@ -13,7 +13,7 @@ const helpEmbed = () => new EmbedBuilder()
         },
         {
             name: 'Dừng lượt chơi',
-            value: 'Dùng lệnh `!stop` trong kênh chơi nối từ'
+            value: 'Dùng lệnh `!stop` trong kênh chơi nối từ, khi `stop` thì lượt mới sẽ tự động bắt đầu!'
         },
         {
             name: 'Xem thống kê của BOT',

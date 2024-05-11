@@ -188,7 +188,7 @@ client.on('messageCreate', async message => {
 
     if (message.content === START_COMMAND) {
         if (!isRunning) {
-            sendMessageToChannel(`Trò chơi đã bắt đầu, ai đó hãy bắt đầu với một từ nào!`, configChannel)
+            sendMessageToChannel(`Trò chơi đã bắt đầu!`, configChannel)
             startGame(configChannel)
         } else sendMessageToChannel('Trò chơi vẫn đang tiếp tục. Bạn có thể dùng `!stop`', configChannel)
         return
