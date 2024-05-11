@@ -3,14 +3,22 @@ const fs = require('fs')
 const path = require('path')
 const statsFile = path.resolve(__dirname, '../data/stats.txt')
 const queryPath = path.resolve(__dirname, '../data/query.txt')
+const wordDatabasePath = path.resolve(__dirname, '../data/words.txt')
 
 let queryNumber = '0'
+let dicDataCount = 0
 
 fs.readFile(queryPath, 'utf-8', (err, data) => {
     if (!err) {
         queryNumber = data
     }
 });
+
+fs.readFile(wordDatabasePath, 'utf-8', (err, data) => {
+    if (!err) {
+        dicDataCount = data.toLowerCase().split('\n').length
+    }
+})
 
 const statEmbed = (client) => new EmbedBuilder()
     .setColor(13250094)
@@ -29,7 +37,7 @@ const statEmbed = (client) => new EmbedBuilder()
         },
         {
             name: 'Tổng số từ trong ngân hàng từ',
-            value: '...'
+            value: `${dicDataCount}`
         },
     )
 
