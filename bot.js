@@ -308,8 +308,9 @@ client.on('messageCreate', async message => {
     console.log(`[${configChannel}] - #${words.length} - ${tu}`)
 
     if(!checkIfHaveAnswerInDb(tu)) {
-        sendMessageToChannel(`${message.author.displayName} đã chiến thắng sau ${words.length} lượt! Trò chơi kết thúc`, configChannel)
+        sendMessageToChannel(`${message.author.displayName} đã chiến thắng sau ${words.length} lượt! Lượt mới đã bắt đầu!`, configChannel)
         initWordData(configChannel)
+        startGame(configChannel)
         return
     }
 
