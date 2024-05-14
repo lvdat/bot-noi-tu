@@ -3,7 +3,7 @@ const path = require('path')
 const { Client, GatewayIntentBits, Collection, PermissionsBitField } = require('discord.js')
 const axios = require('axios')
 require('dotenv').config()
-const { generateDependencyReport } = require('@discordjs/voice');
+const { generateDependencyReport } = require('@discordjs/voice')
 const moment = require('moment-timezone')
 
 console.log(generateDependencyReport());
@@ -85,9 +85,9 @@ async function continueExecution() {
         }
         const tempWord = data.toLowerCase().split('\n')
         console.log(`[OK] Loaded ${tempWord.length} words. Normalizing...`)
-        global.dicData = tempWord.filter(w => w.split(' ').length >= 2 && !w.includes('-') && !w.includes('(') && !w.includes(')'))
+        global.dicData = tempWord.filter(w => w.split(' ').length == 2 && !w.includes('-') && !w.includes('(') && !w.includes(')'))
         console.log(`[OK] Normalized words. ${global.dicData.length} words remaining.`)
-        console.log(global.dicData)
+        // console.log(global.dicData)
     })
 }
 
