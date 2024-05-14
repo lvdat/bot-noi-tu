@@ -222,7 +222,7 @@ client.on('messageCreate', async message => {
     tu = args1.join(' ') // remake word after split.
     let words = wordDataChannel[configChannel].words
 
-    console.log(args1)
+    // console.log(args1)
 
     // functions load after channel defined
 
