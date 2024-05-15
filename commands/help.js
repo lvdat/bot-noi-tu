@@ -20,6 +20,14 @@ const helpEmbed = () => new EmbedBuilder()
             value: 'Dùng lệnh slash `/stats`'
         },
         {
+            name: 'Xem bảng xếp hạng server',
+            value: 'Dùng lệnh slash `/rank`'
+        },
+        {
+            name: 'Xem thống kê cá nhân',
+            value: 'Dùng lệnh slash `/me`'
+        },
+        {
             name: 'Ai có thể dùng lệnh set-channel?',
             value: 'Người dùng có quyền **MANAGE_CHANNELS**'
         },
