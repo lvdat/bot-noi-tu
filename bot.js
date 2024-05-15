@@ -15,6 +15,7 @@ const queryPath = path.resolve(__dirname, './data/query.txt')
 const wordDataUrl = 'https://github.com/undertheseanlp/dictionary/raw/master/dictionary/words.txt'
 const wordDatabasePath = path.resolve(__dirname, './data/words.txt')
 const voiceLogPath = path.resolve(__dirname, './data/voice-log.txt')
+const rankingPath = path.resolve(__dirname, './data/ranking.json')
 
 if (!fs.existsSync(dataPath)) {
     console.log(`[WARNING] File data.json doesn't exist. Creating...`)
@@ -42,6 +43,13 @@ if (!fs.existsSync(voiceLogPath)) {
     fs.writeFileSync(voiceLogPath, '')
 } else {
     console.log(`[OK] File voice-log.txt exist.`)
+}
+
+if (!fs.existsSync(rankingPath)) {
+    console.log(`[WARNING] File ranking.json.json doesn't exist. Creating...`)
+    fs.writeFileSync(rankingPath, JSON.stringify(emptyData))
+} else {
+    console.log(`[OK] File ranking.json.json exist.`)
 }
 
 const client = new Client({
