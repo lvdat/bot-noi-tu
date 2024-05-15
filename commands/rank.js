@@ -53,6 +53,7 @@ const embedData = (guildId) => {
             embedd[0].value += ('`' + (i + 1) + '` ' + rankOfServer[i].name + '\n')
             embedd[1].value += ('`' + rankOfServer[i].win + '`\n')
             embedd[2].value += ('`' + rankOfServer[i].true + '/' + rankOfServer[i].total + ' (' + (rankOfServer[i].true/rankOfServer[i].total*100).toFixed(2) + '%)`\n')
+            if (i == 9) break
         }
         return embedd
     }
