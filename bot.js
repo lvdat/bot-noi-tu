@@ -329,8 +329,15 @@ client.on('messageCreate', async message => {
         fs.writeFileSync(rankingPath, JSON.stringify(rankingData))
     }
 
+    /**
+     * 
+     * @param {Number} userId 
+     * @param {String} newName 
+     * @param {String} newAvatar 
+     */
     const updateNameUserRankData = (userId, newName, newAvatar) => {
         for (let i = 0; i < rankingData[message.guildId].players.length; i++) {
+            queryCount++
             if(rankingData[message.guildId].players[i].id === userId) {
                 rankingData[message.guildId].players[i].name = newName
                 rankingData[message.guildId].players[i].avatar = newAvatar
