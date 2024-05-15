@@ -367,8 +367,6 @@ client.on('messageCreate', async message => {
 
     // end function
 
-    console.log(rankingData[message.guildId].players[message.author.id])
-
     if (!checkUserRankingDataExist(message.author.id)) {
         initRankDataForUser(message.author.id, message.author.displayName, message.author.avatarURL())
     } else {
