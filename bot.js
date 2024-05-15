@@ -298,29 +298,58 @@ client.on('messageCreate', async message => {
     /**
      * 
      * @param {Number} userId 
-     * @param {String} name 
+     * @returns {Boolean}
      */
-    const initRankDataForUser = (userId, name) => {
-        rankingData[message.guildId].players[userId] = {
+    const checkUserRankingDataExist = (userId) => {
+        let playerArray = rankingData[message.guildId].players
+        if (playerArray.length === 0) return false
+        for (let i = 0; i < playerArray.length; i++) {
+            if (playerArray[i].id === userId) {
+                queryCount++
+                return true
+            }
+        }
+        return false
+    }
+
+    /**
+     * 
+     * @param {Number} userId 
+     * @param {String} name 
+     * @param {String|Url} avatar
+     */
+    const initRankDataForUser = (userId, name, avatar) => {
+        rankingData[message.guildId].players.push({
+            id: userId,
             win: 0,
             total: 0,
-            name
-        }
+            name,
+            avatar
+        })
         fs.writeFileSync(rankingPath, JSON.stringify(rankingData))
     }
 
-    const updateNameUserRankData = (userId, newName) => {
-        rankingData[message.guildId].players[userId].name = newName
+    const updateNameUserRankData = (userId, newName, newAvatar) => {
+        for (let i = 0; i < rankingData[message.guildId].players.length; i++) {
+            if(rankingData[message.guildId].players[i].id === userId) {
+                rankingData[message.guildId].players[i].name = newName
+                rankingData[message.guildId].players[i].avatar = newAvatar
+            }
+        }
         fs.writeFileSync(rankingPath, JSON.stringify(rankingData))
     }
 
     // end function
 
-    if (rankingData[message.guildId].players[message.author.id] === undefined) {
-        initRankDataForUser(message.author.id, message.author.displayName)
+    console.log(rankingData[message.guildId].players[message.author.id])
+
+    if (checkUserRankingDataExist(message.author.id)) {
+        initRankDataForUser(message.author.id, message.author.displayName, message.author.avatarURL())
     } else {
-        updateNameUserRankData(message.author.id, message.author.displayName)
+        updateNameUserRankData(message.author.id, message.author.displayName, message.author.avatarURL())
     }
+
+    console.log(rankingData)
 
     if(words.length > 0) {
         // player can't answer 2 times
