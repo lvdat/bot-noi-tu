@@ -323,6 +323,7 @@ client.on('messageCreate', async message => {
             id: userId,
             win: 0,
             total: 0,
+            true: 0,
             name,
             avatar
         })
@@ -335,12 +336,30 @@ client.on('messageCreate', async message => {
      * @param {String} newName 
      * @param {String} newAvatar 
      */
-    const updateNameUserRankData = (userId, newName, newAvatar) => {
+    const updateInfoUserRankData = (userId, newName, newAvatar) => {
         for (let i = 0; i < rankingData[message.guildId].players.length; i++) {
             queryCount++
             if(rankingData[message.guildId].players[i].id === userId) {
                 rankingData[message.guildId].players[i].name = newName
                 rankingData[message.guildId].players[i].avatar = newAvatar
+            }
+        }
+        fs.writeFileSync(rankingPath, JSON.stringify(rankingData))
+    }
+
+    /**
+     * 
+     * @param {Number} newWin
+     * @param {Number} newTrue
+     * @param {Number} newTotal 
+     */
+    const updateRankingForUser = (newWin, newTrue, newTotal) => {
+        for (let i = 0; i < rankingData[message.guildId].players.length; i++) {
+            queryCount++
+            if(rankingData[message.guildId].players[i].id === message.author.id) {
+                rankingData[message.guildId].players[i].win += newWin
+                rankingData[message.guildId].players[i].true += newTrue
+                rankingData[message.guildId].players[i].total += newTotal
             }
         }
         fs.writeFileSync(rankingPath, JSON.stringify(rankingData))
@@ -353,10 +372,10 @@ client.on('messageCreate', async message => {
     if (!checkUserRankingDataExist(message.author.id)) {
         initRankDataForUser(message.author.id, message.author.displayName, message.author.avatarURL())
     } else {
-        updateNameUserRankData(message.author.id, message.author.displayName, message.author.avatarURL())
+        updateInfoUserRankData(message.author.id, message.author.displayName, message.author.avatarURL())
     }
 
-    console.log(rankingData)
+    // console.log(rankingData)
 
     if(words.length > 0) {
         // player can't answer 2 times
@@ -395,10 +414,10 @@ client.on('messageCreate', async message => {
     if(!checkDict(tu)) {
         // check in dictionary
         message.react('❌')
+        updateRankingForUser(0, 0, 1)
         //sendMessageToChannel('Từ này không có trong từ điển tiếng Việt!', configChannel)
         return
     }
-
 
     words.push(tu)
     wordDataChannel[configChannel].words = words
@@ -408,6 +427,8 @@ client.on('messageCreate', async message => {
     fs.writeFileSync(wordDataPath, JSON.stringify(wordDataChannel))
 
     message.react('✅')
+
+    updateRankingForUser(0)
 
     console.log(`[${configChannel}] - #${words.length} - ${tu}`)
 
