@@ -140,6 +140,13 @@ client.on('messageCreate', async message => {
         })
     }
 
+    const sendAutoDeleteMessageToChannel = (msg, channel_id, seconds = 3) => {
+        client.channels.cache.get(channel_id).send({
+            content: msg,
+            flags: [4096]
+        }).then(mess => setTimeout(() => mess.delete(), 1000 * seconds))
+    }
+ 
     const isWordDataExist = (channel) => {
         return wordDataChannel[channel] !== undefined
     }
@@ -260,7 +267,7 @@ client.on('messageCreate', async message => {
         let lastPlayerId = currentWordData.currentPlayer.id
         if (message.author.id === lastPlayerId) {
             message.react('❌')
-            sendMessageToChannel('Bạn đã trả lời lượt trước rồi, hãy đợi đối thủ!', configChannel)
+            sendAutoDeleteMessageToChannel('Bạn đã trả lời lượt trước rồi, hãy đợi đối thủ!', configChannel)
             return
         }
     }
@@ -268,7 +275,7 @@ client.on('messageCreate', async message => {
     // check if words have or more than 1 space
     if (!(args1.length > 1)) {
         message.react('❌')
-        sendMessageToChannel('Vui lòng nhập từ có chứa nhiều hơn 2 tiếng!', configChannel)
+        sendAutoDeleteMessageToChannel('Vui lòng nhập từ có chứa nhiều hơn 2 tiếng!', configChannel)
         return
     }
 
@@ -277,14 +284,15 @@ client.on('messageCreate', async message => {
         const args2 = lastWord.split(/\s+/).filter(Boolean)
         if (!(args1[0] === args2[args2.length - 1])) {
             message.react('❌')
-            sendMessageToChannel('Từ này không bắt đầu với tiếng `' + args2[args2.length - 1] + '`', configChannel)
+            // sendMessageToChannel('Từ này không bắt đầu với tiếng `' + args2[args2.length - 1] + '`', configChannel)
+            sendAutoDeleteMessageToChannel('Từ này không bắt đầu với tiếng `' + args2[args2.length - 1] + '`', configChannel)
             return
         }
     }
 
     if (checkIfWordUsed(tu)) {
         message.react('❌')
-        sendMessageToChannel('Từ này đã được sử dụng!', configChannel)
+        sendAutoDeleteMessageToChannel('Từ này đã được sử dụng!', configChannel)
         return
     }
 
