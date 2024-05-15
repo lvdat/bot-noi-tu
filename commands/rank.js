@@ -18,8 +18,22 @@ const getRankOfServer = (guildId) => {
     }
 }
 
+/**
+ * 
+ * @param {Number} guildId 
+ * @returns {Array}
+ */
 const embedData = (guildId) => {
     const rankOfServer = getRankOfServer(guildId)
+
+    if(rankOfServer.length === 0) {
+        return [{
+            name: 'Top 10',
+            value: 'Chưa có ai chơi nối từ ở server này.'
+        }]
+    } else {
+        
+    }
     
 }
 

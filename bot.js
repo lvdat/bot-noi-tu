@@ -5,6 +5,7 @@ const axios = require('axios')
 require('dotenv').config()
 const { generateDependencyReport } = require('@discordjs/voice')
 const moment = require('moment-timezone')
+const me = require('./commands/me')
 
 console.log(generateDependencyReport());
 
@@ -257,6 +258,11 @@ client.on('messageCreate', async message => {
 
     // functions load after channel defined
 
+    /**
+     * 
+     * @param {String} word 
+     * @returns {Boolean}
+     */
     const checkIfWordUsed = (word) => {
         for (let j = 0; j < words.length; j++) {
             if (words[j] === word) {
@@ -265,6 +271,11 @@ client.on('messageCreate', async message => {
         }
     }
 
+    /**
+     * 
+     * @param {String} word 
+     * @returns {Boolean}
+     */
     const checkIfHaveAnswerInDb = (word) => {
         let w = word.split(/ +/)
         let lc = w[w.length - 1]
@@ -284,7 +295,32 @@ client.on('messageCreate', async message => {
         return false
     }
 
+    /**
+     * 
+     * @param {Number} userId 
+     * @param {String} name 
+     */
+    const initRankDataForUser = (userId, name) => {
+        rankingData[message.guildId].players[userId] = {
+            win: 0,
+            total: 0,
+            name
+        }
+        fs.writeFileSync(rankingPath, JSON.stringify(rankingData))
+    }
+
+    const updateNameUserRankData = (userId, newName) => {
+        rankingData[message.guildId].players[userId].name = newName
+        fs.writeFileSync(rankingPath, JSON.stringify(rankingData))
+    }
+
     // end function
+
+    if (rankingData[message.guildId].players[message.author.id] === undefined) {
+        initRankDataForUser(message.author.id, message.author.displayName)
+    } else {
+        updateNameUserRankData(message.author.id, message.author.displayName)
+    }
 
     if(words.length > 0) {
         // player can't answer 2 times
