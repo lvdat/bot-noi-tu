@@ -139,6 +139,7 @@ for (const file of eventFiles) {
 client.on('messageCreate', async message => {
     const dataChannel = require(dataPath)
     const wordDataChannel = require(wordDataPath)
+    const rankingData = require(rankingPath)
 
     // function
     const sendMessageToChannel = (msg, channel_id) => {
@@ -180,6 +181,14 @@ client.on('messageCreate', async message => {
         }
         fs.writeFileSync(wordDataPath, JSON.stringify(wordDataChannel))
     }
+
+    const initRankingData = (guild) => {
+        rankingData[guild] = {
+            players: []
+        }
+        fs.writeFileSync(rankingPath, JSON.stringify(rankingData))
+    }
+
     // end function
 
     if(message.author.bot) return // detect mess from BOT
@@ -189,6 +198,7 @@ client.on('messageCreate', async message => {
 
     if(dataChannel[guild.id] === undefined || dataChannel[guild.id].channel === undefined) {
         // detect channel not config
+        queryCount++
         return
     }
     let configChannel = dataChannel[guild.id].channel
@@ -197,6 +207,12 @@ client.on('messageCreate', async message => {
 
     if(!isWordDataExist(configChannel)) {
         initWordData(configChannel)
+    }
+
+    if (rankingData[guild.id] === undefined) {
+        // create ranking data for server if dont have.
+        queryCount++
+        initRankingData(guild.id)
     }
 
     let isRunning = isGameRunning(configChannel)
