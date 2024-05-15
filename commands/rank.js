@@ -25,6 +25,23 @@ const getRankOfServer = (guildId) => {
  */
 const embedData = (guildId) => {
     const rankOfServer = getRankOfServer(guildId)
+    let embedd = [
+        {
+            name: 'Top 10',
+            value: '',
+            inline: true
+        },
+        {
+            name: 'Thắng',
+            value: '',
+            inline: true
+        },
+        {
+            name: 'Từ đúng',
+            value: '',
+            inline: true
+        }
+    ]
 
     if(rankOfServer.length === 0) {
         return [{
@@ -32,7 +49,12 @@ const embedData = (guildId) => {
             value: 'Chưa có ai chơi nối từ ở server này.'
         }]
     } else {
-        
+        for (let i = 0; i < rankOfServer.length; i++) {
+            embedd[0].value += ('`' + (i + 1) + '` ' + rankOfServer[i].name + '\n')
+            embedd[1].value += ('`' + rankOfServer[i].win + '`\n')
+            embedd[2].value += ('`' + rankOfServer[i].true + '/' + rankOfServer[i].total + ' (' + (rankOfServer[i].true/rankOfServer[i].total*100) + '%)`\n')
+        }
+        return embedd
     }
     
 }
@@ -43,23 +65,7 @@ const rankEmbed = (interaction, client, rankData) => new EmbedBuilder()
         name: `BXH nối từ của ${interaction.member.guild.name}`,
         iconURL: interaction.member.guild.iconURL({ dynamic: true })
     })
-    .addFields(
-        {
-            name: 'Top 10',
-            value: '`1` Dont ask me why\n`2` Dont ask me why',
-            inline: true
-        },
-        {
-            name: 'Thắng',
-            value: '`100`\n`100`',
-            inline: true
-        },
-        {
-            name: 'Từ đúng',
-            value: '`100/500 (20%)`\n`100/500 (20%)`',
-            inline: true
-        }
-    )
+    .addFields(embedData(interaction.member.guild.id))
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -68,7 +74,6 @@ module.exports = {
 
         async execute(interaction, client) {
             const rankData = require(rankingPath)
-            console.log(interaction)
             await interaction.reply({
                 embeds: [rankEmbed(interaction, client, rankData)]
             })
