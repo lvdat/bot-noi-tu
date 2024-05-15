@@ -428,12 +428,13 @@ client.on('messageCreate', async message => {
 
     message.react('✅')
 
-    updateRankingForUser(0)
+    updateRankingForUser(0, 1, 1)
 
     console.log(`[${configChannel}] - #${words.length} - ${tu}`)
 
     if(!checkIfHaveAnswerInDb(tu)) {
         sendMessageToChannel(`${message.author.displayName} đã chiến thắng sau ${words.length} lượt! Lượt mới đã bắt đầu!`, configChannel)
+        updateRankingForUser(1, 0, 0)
         initWordData(configChannel)
         startGame(configChannel)
         return
