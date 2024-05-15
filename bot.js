@@ -5,6 +5,7 @@ const axios = require('axios')
 require('dotenv').config()
 const { generateDependencyReport } = require('@discordjs/voice')
 const moment = require('moment-timezone')
+const me = require('./commands/me')
 
 console.log(generateDependencyReport());
 
@@ -15,6 +16,7 @@ const queryPath = path.resolve(__dirname, './data/query.txt')
 const wordDataUrl = 'https://github.com/undertheseanlp/dictionary/raw/master/dictionary/words.txt'
 const wordDatabasePath = path.resolve(__dirname, './data/words.txt')
 const voiceLogPath = path.resolve(__dirname, './data/voice-log.txt')
+const rankingPath = path.resolve(__dirname, './data/ranking.json')
 
 if (!fs.existsSync(dataPath)) {
     console.log(`[WARNING] File data.json doesn't exist. Creating...`)
@@ -42,6 +44,13 @@ if (!fs.existsSync(voiceLogPath)) {
     fs.writeFileSync(voiceLogPath, '')
 } else {
     console.log(`[OK] File voice-log.txt exist.`)
+}
+
+if (!fs.existsSync(rankingPath)) {
+    console.log(`[WARNING] File ranking.json.json doesn't exist. Creating...`)
+    fs.writeFileSync(rankingPath, JSON.stringify(emptyData))
+} else {
+    console.log(`[OK] File ranking.json.json exist.`)
 }
 
 const client = new Client({
@@ -131,6 +140,7 @@ for (const file of eventFiles) {
 client.on('messageCreate', async message => {
     const dataChannel = require(dataPath)
     const wordDataChannel = require(wordDataPath)
+    const rankingData = require(rankingPath)
 
     // function
     const sendMessageToChannel = (msg, channel_id) => {
@@ -172,6 +182,14 @@ client.on('messageCreate', async message => {
         }
         fs.writeFileSync(wordDataPath, JSON.stringify(wordDataChannel))
     }
+
+    const initRankingData = (guild) => {
+        rankingData[guild] = {
+            players: []
+        }
+        fs.writeFileSync(rankingPath, JSON.stringify(rankingData))
+    }
+
     // end function
 
     if(message.author.bot) return // detect mess from BOT
@@ -181,6 +199,7 @@ client.on('messageCreate', async message => {
 
     if(dataChannel[guild.id] === undefined || dataChannel[guild.id].channel === undefined) {
         // detect channel not config
+        queryCount++
         return
     }
     let configChannel = dataChannel[guild.id].channel
@@ -189,6 +208,12 @@ client.on('messageCreate', async message => {
 
     if(!isWordDataExist(configChannel)) {
         initWordData(configChannel)
+    }
+
+    if (rankingData[guild.id] === undefined) {
+        // create ranking data for server if dont have.
+        queryCount++
+        initRankingData(guild.id)
     }
 
     let isRunning = isGameRunning(configChannel)
@@ -233,6 +258,11 @@ client.on('messageCreate', async message => {
 
     // functions load after channel defined
 
+    /**
+     * 
+     * @param {String} word 
+     * @returns {Boolean}
+     */
     const checkIfWordUsed = (word) => {
         for (let j = 0; j < words.length; j++) {
             if (words[j] === word) {
@@ -241,6 +271,11 @@ client.on('messageCreate', async message => {
         }
     }
 
+    /**
+     * 
+     * @param {String} word 
+     * @returns {Boolean}
+     */
     const checkIfHaveAnswerInDb = (word) => {
         let w = word.split(/ +/)
         let lc = w[w.length - 1]
@@ -260,7 +295,87 @@ client.on('messageCreate', async message => {
         return false
     }
 
+    /**
+     * 
+     * @param {Number} userId 
+     * @returns {Boolean}
+     */
+    const checkUserRankingDataExist = (userId) => {
+        let playerArray = rankingData[message.guildId].players
+        if (playerArray.length === 0) return false
+        for (let i = 0; i < playerArray.length; i++) {
+            if (playerArray[i].id === userId) {
+                queryCount++
+                return true
+            }
+        }
+        return false
+    }
+
+    /**
+     * 
+     * @param {Number} userId 
+     * @param {String} name 
+     * @param {String|Url} avatar
+     */
+    const initRankDataForUser = (userId, name, avatar) => {
+        rankingData[message.guildId].players.push({
+            id: userId,
+            win: 0,
+            total: 0,
+            true: 0,
+            name,
+            avatar
+        })
+        fs.writeFileSync(rankingPath, JSON.stringify(rankingData))
+    }
+
+    /**
+     * 
+     * @param {Number} userId 
+     * @param {String} newName 
+     * @param {String} newAvatar 
+     */
+    const updateInfoUserRankData = (userId, newName, newAvatar) => {
+        for (let i = 0; i < rankingData[message.guildId].players.length; i++) {
+            queryCount++
+            if(rankingData[message.guildId].players[i].id === userId) {
+                rankingData[message.guildId].players[i].name = newName
+                rankingData[message.guildId].players[i].avatar = newAvatar
+            }
+        }
+        fs.writeFileSync(rankingPath, JSON.stringify(rankingData))
+    }
+
+    /**
+     * 
+     * @param {Number} newWin
+     * @param {Number} newTrue
+     * @param {Number} newTotal 
+     */
+    const updateRankingForUser = (newWin, newTrue, newTotal) => {
+        for (let i = 0; i < rankingData[message.guildId].players.length; i++) {
+            queryCount++
+            if(rankingData[message.guildId].players[i].id === message.author.id) {
+                rankingData[message.guildId].players[i].win += newWin
+                rankingData[message.guildId].players[i].true += newTrue
+                rankingData[message.guildId].players[i].total += newTotal
+            }
+        }
+        fs.writeFileSync(rankingPath, JSON.stringify(rankingData))
+    }
+
     // end function
+
+    console.log(rankingData[message.guildId].players[message.author.id])
+
+    if (!checkUserRankingDataExist(message.author.id)) {
+        initRankDataForUser(message.author.id, message.author.displayName, message.author.avatarURL())
+    } else {
+        updateInfoUserRankData(message.author.id, message.author.displayName, message.author.avatarURL())
+    }
+
+    // console.log(rankingData)
 
     if(words.length > 0) {
         // player can't answer 2 times
@@ -299,10 +414,10 @@ client.on('messageCreate', async message => {
     if(!checkDict(tu)) {
         // check in dictionary
         message.react('❌')
+        updateRankingForUser(0, 0, 1)
         //sendMessageToChannel('Từ này không có trong từ điển tiếng Việt!', configChannel)
         return
     }
-
 
     words.push(tu)
     wordDataChannel[configChannel].words = words
@@ -313,10 +428,13 @@ client.on('messageCreate', async message => {
 
     message.react('✅')
 
+    updateRankingForUser(0, 1, 1)
+
     console.log(`[${configChannel}] - #${words.length} - ${tu}`)
 
     if(!checkIfHaveAnswerInDb(tu)) {
         sendMessageToChannel(`${message.author.displayName} đã chiến thắng sau ${words.length} lượt! Lượt mới đã bắt đầu!`, configChannel)
+        updateRankingForUser(1, 0, 0)
         initWordData(configChannel)
         startGame(configChannel)
         return
