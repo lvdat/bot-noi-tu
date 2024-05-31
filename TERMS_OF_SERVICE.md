@@ -15,3 +15,6 @@ You are granted a non-exclusive, non-transferable, revocable license to use the 
 - PhoBo Team reserves the rights to prohibit any server or user from using the Bot.
 - The client is responsible for any violation caused by them.
 - We have the rights to update terms of service anytime with a notice in the support server.
+
+## 4. Contact Us
+If you have any questions about this Terms of Service, please contact us at lvdat010203@gmail.com or Support Discord Server at https://discord.gg/TFvSWf9SBb.
