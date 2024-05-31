@@ -128,7 +128,6 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-voice-log.txt
 data/data.json
 query.txt
 score.txt

@@ -3,11 +3,7 @@ const path = require('path')
 const { Client, GatewayIntentBits, Collection, PermissionsBitField } = require('discord.js')
 const axios = require('axios')
 require('dotenv').config()
-const { generateDependencyReport } = require('@discordjs/voice')
 const moment = require('moment-timezone')
-const me = require('./commands/me')
-
-console.log(generateDependencyReport());
 
 const emptyData = {}
 const dataPath = path.resolve(__dirname, './data/data.json')
@@ -15,7 +11,6 @@ const wordDataPath = path.resolve(__dirname, './data/word-data.json')
 const queryPath = path.resolve(__dirname, './data/query.txt')
 const wordDataUrl = 'https://github.com/undertheseanlp/dictionary/raw/master/dictionary/words.txt'
 const wordDatabasePath = path.resolve(__dirname, './data/words.txt')
-const voiceLogPath = path.resolve(__dirname, './data/voice-log.txt')
 const rankingPath = path.resolve(__dirname, './data/ranking.json')
 
 if (!fs.existsSync(dataPath)) {
@@ -39,13 +34,6 @@ if (!fs.existsSync(queryPath)) {
     console.log(`[OK] File query.txt exist.`)
 }
 
-if (!fs.existsSync(voiceLogPath)) {
-    console.log(`[WARNING] File voice-log.txt doesn't exist. Creating...`)
-    fs.writeFileSync(voiceLogPath, '')
-} else {
-    console.log(`[OK] File voice-log.txt exist.`)
-}
-
 if (!fs.existsSync(rankingPath)) {
     console.log(`[WARNING] File ranking.json.json doesn't exist. Creating...`)
     fs.writeFileSync(rankingPath, JSON.stringify(emptyData))
@@ -57,8 +45,7 @@ const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent,
-        GatewayIntentBits.GuildVoiceStates
+        GatewayIntentBits.MessageContent
     ]
 })
 
@@ -136,7 +123,6 @@ for (const file of eventFiles) {
 }
 
 // LOGIC GAME
-
 client.on('messageCreate', async message => {
     const dataChannel = require(dataPath)
     const wordDataChannel = require(wordDataPath)
@@ -441,7 +427,6 @@ client.on('messageCreate', async message => {
     fs.writeFileSync(queryPath, queryCount.toString())
     return
 })
-
 // END LOGIC GAME
 
 // The interactionCreate event directly here, as this is the heart of the robot.
@@ -453,7 +438,7 @@ client.on('interactionCreate', async (interaction) => {
     // We log when a user makes a command
     try {
         await console.log(
-            `/${interaction.commandName} — Par ${interaction.user.username}`
+            `${interaction.user.username} used /${interaction.commandName}`
         )
         await command.execute(interaction, client)
         // But if there is a mistake, 
@@ -465,16 +450,6 @@ client.on('interactionCreate', async (interaction) => {
             ephemeral: true,
             fetchReply: true
         })
-    }
-})
-
-client.on('voiceStateUpdate', (oldState, newState) => {
-    if (newState.channel) {
-        console.log(`[${moment().tz('Asia/Ho_Chi_Minh').format()}] [${newState.guild.name}] [${newState.channel.name}] ${newState.member.user.username} connected`)
-        fs.appendFileSync(voiceLogPath, `[${moment().tz('Asia/Ho_Chi_Minh').format()}] [${newState.guild.name}] [${newState.channel.name}] ${newState.member.user.username} connected\n`)
-    } else if (oldState.channel) {
-        console.log(`[${moment().tz('Asia/Ho_Chi_Minh').format()}] [${oldState.guild.name}] [${oldState.channel.name}] ${oldState.member.user.username} disconnected`)
-        fs.appendFileSync(voiceLogPath, `[${moment().tz('Asia/Ho_Chi_Minh').format()}] [${oldState.guild.name}] [${oldState.channel.name}] ${oldState.member.user.username} díconnected\n`)
     }
 })
 
