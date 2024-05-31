@@ -3,7 +3,6 @@ const path = require('path')
 const { Client, GatewayIntentBits, Collection, PermissionsBitField } = require('discord.js')
 const axios = require('axios')
 require('dotenv').config()
-const moment = require('moment-timezone')
 
 const emptyData = {}
 const dataPath = path.resolve(__dirname, './data/data.json')
