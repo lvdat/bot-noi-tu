@@ -37,7 +37,7 @@ if (!fs.existsSync(rankingPath)) {
     console.log(`[WARNING] File ranking.json.json doesn't exist. Creating...`)
     fs.writeFileSync(rankingPath, JSON.stringify(emptyData))
 } else {
-    console.log(`[OK] File ranking.json.json exist.`)
+    console.log(`[OK] File ranking.json exist.`)
 }
 
 const client = new Client({
