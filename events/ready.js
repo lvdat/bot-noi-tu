@@ -6,7 +6,7 @@ module.exports = {
     name: 'ready',
     async execute(client) {
         console.log(`Connected as ${client.user.username}`)
-        client.user.setActivity(`nối từ | ${client.guilds.cache.size} servers`, { type: ActivityType.Playing })
+        client.user.setActivity(`nối từ | /rank`, { type: ActivityType.Playing })
         client.user.setStatus('idle')
 
         // This is when the Slash Commands synchronisation starts
