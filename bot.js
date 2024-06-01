@@ -250,6 +250,7 @@ client.on('messageCreate', async message => {
      */
     const checkIfWordUsed = (word) => {
         for (let j = 0; j < words.length; j++) {
+            queryCount++
             if (words[j] === word) {
                 return true
             }
@@ -265,11 +266,11 @@ client.on('messageCreate', async message => {
         let w = word.split(/ +/)
         let lc = w[w.length - 1]
         for (let i = 0; i < global.dicData.length; i++) {
+            queryCount++
             let temp = global.dicData[i]
             let tempw = temp.split(/ +/)
             if (tempw.length > 1 && tempw[0] === lc) {
                 // detect word
-                queryCount += i
                 if (checkIfWordUsed(temp)) {
                     // if word is used, cancel this loop round.
                     continue
@@ -289,8 +290,8 @@ client.on('messageCreate', async message => {
         let playerArray = rankingData[message.guildId].players
         if (playerArray.length === 0) return false
         for (let i = 0; i < playerArray.length; i++) {
+            queryCount++
             if (playerArray[i].id === userId) {
-                queryCount++
                 return true
             }
         }
