@@ -5,22 +5,33 @@ const path = require('path')
 const queryPath = path.resolve(__dirname, '../data/query.txt')
 const wordDatabasePath = path.resolve(__dirname, '../data/words.txt')
 
-let queryNumber = '0'
-let dicDataCount = 0
+function getStats() {
+    let queryNumber = '0'
+    let dicDataCount = 0
 
-fs.readFile(queryPath, 'utf-8', (err, data) => {
-    if (!err) {
-        queryNumber = data
+    try {
+        // Đọc file query.txt và cập nhật queryNumber
+        const queryData = fs.readFileSync(queryPath, 'utf-8')
+        queryNumber = queryData;
+    } catch (err) {
+        console.error(`Error reading file ${queryPath}:`, err)
     }
-});
 
-fs.readFile(wordDatabasePath, 'utf-8', (err, data) => {
-    if (!err) {
-        dicDataCount = data.toLowerCase().split('\n').length
+    try {
+        // Đọc file words.txt và cập nhật dicDataCount
+        const wordData = fs.readFileSync(wordDatabasePath, 'utf-8')
+        dicDataCount = wordData.toLowerCase().split('\n').length
+    } catch (err) {
+        console.error(`Error reading file ${wordDatabasePath}:`, err)
     }
-})
 
-const statEmbed = (client) => new EmbedBuilder()
+    return { queryNumber, dicDataCount }
+}
+
+const statEmbed = (client) => {
+    const { queryNumber, dicDataCount } = getStats()
+
+    return new EmbedBuilder()
     .setColor(13250094)
     .addFields(
         {
@@ -40,6 +51,7 @@ const statEmbed = (client) => new EmbedBuilder()
             value: `${dicDataCount}`
         },
     )
+}
 
 module.exports = {
     data: new SlashCommandBuilder()
