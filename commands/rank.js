@@ -70,7 +70,7 @@ const embedData = (guildId) => {
     
 }
 
-const rankEmbed = (interaction, client, rankData) => new EmbedBuilder()
+const rankEmbed = (interaction) => new EmbedBuilder()
     .setColor(13250094)
     .setAuthor({
         name: `BXH nối từ của ${interaction.member.guild.name}`,
@@ -86,7 +86,7 @@ module.exports = {
         async execute(interaction, client) {
             const rankData = require(rankingPath)
             await interaction.reply({
-                embeds: [rankEmbed(interaction, client, rankData)]
+                embeds: [rankEmbed(interaction)]
             })
         }
 }
