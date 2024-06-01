@@ -14,7 +14,14 @@ const getRankOfServer = (guildId) => {
     if (rankData[guildId] === undefined) {
         return []
     } else {
-        return rankData[guildId].players.length === 0 ? [] : rankData[guildId].players.sort((a, b) => b.win - a.win)
+        return rankData[guildId].players.length === 0 ? [] : rankData[guildId].players.sort((a, b) => {
+            if (b.win !== a.win) {
+                return b.win - a.win
+            }
+            const aAccuracy = a.total === 0 ? 0 : a.true / a.total;
+            const bAccuracy = b.total === 0 ? 0 : b.true / b.total;
+            return bAccuracy - aAccuracy;
+        })
     }
 }
 
