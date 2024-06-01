@@ -20,7 +20,10 @@ const getRankOfServer = (guildId) => {
             }
             const aAccuracy = a.total === 0 ? 0 : a.true / a.total;
             const bAccuracy = b.total === 0 ? 0 : b.true / b.total;
-            return bAccuracy - aAccuracy;
+            if (bAccuracy !== aAccuracy) {
+                return bAccuracy - aAccuracy;
+            }
+            return b.true - a.true;
         })
     }
 }
