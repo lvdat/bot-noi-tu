@@ -11,6 +11,8 @@ const queryPath = path.resolve(__dirname, './data/query.txt')
 const wordDataUrl = 'https://github.com/undertheseanlp/dictionary/raw/master/dictionary/words.txt'
 const wordDatabasePath = path.resolve(__dirname, './data/words.txt')
 const rankingPath = path.resolve(__dirname, './data/ranking.json')
+const contributeWordsUrl = 'https://github.com/lvdat/phobo-contribute-words/raw/main/accepted-words.txt'
+const contributeWordsPath = path.resolve(__dirname, './data/contribute-words.txt')
 
 if (!fs.existsSync(dataPath)) {
     console.log(`[WARNING] File data.json doesn't exist. Creating...`)
@@ -85,6 +87,20 @@ async function continueExecution() {
         // console.log(global.dicData)
     })
 }
+
+console.log('[WARNING] Downloading contribute words from Github...')
+axios.get(contributeWordsUrl)
+    .then(async res => {
+        const lines = res.data.toLowerCase().trim().split('\n')
+        fs.writeFileSync(contributeWordsPath, lines.join('\n'))
+        console.log('[OK] Saved ' + lines.length + ' contribute words to ' + contributeWordsPath)
+        global.dicData = global.dicData.concat(lines)
+        console.log('[WARNING] Bot dictionary now have ' + global.dicData.length + ' words')
+    })
+    .catch(err => {
+        console.log('[ERROR] Error when download contribute words: ' + err.message)
+        return
+    })
 
 const checkDict = (word) => {
     return global.dicData.includes(word.toLowerCase())
