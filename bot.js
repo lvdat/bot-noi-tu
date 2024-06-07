@@ -166,8 +166,40 @@ client.on('messageCreate', async message => {
         return isWordDataExist(channel) && wordDataChannel[channel].running === true
     }
 
+    /**
+     * 
+     * @param {String} word 
+     * @returns {Boolean}
+     */
+    const checkIfHaveAnswer = (word) => {
+        let w = word.split(/ +/)
+        let lc = w[w.length - 1]
+        for (let i = 0; i < global.dicData.length; i++) {
+            queryCount++
+            let temp = global.dicData[i]
+            let tempw = temp.split(/ +/)
+            if (tempw.length > 1 && tempw[0] === lc) {
+                // detect word
+                return true
+            }
+        }
+        return false
+    }
+
+    const randomWord = () => {
+        const wordIndex = Math.floor(Math.random() * (global.dicData.length - 1))
+        queryCount += wordIndex + 1
+        const rWord = global.dicData[wordIndex]
+        return checkIfHaveAnswer(rWord) ? rWord : randomWord()
+    }
+
     const startGame = (channel) => {
+        let rwords = []
+        let word = randomWord()
+        rwords.push(word)
         wordDataChannel[channel].running = true
+        wordDataChannel[channel].words = rwords
+        sendMessageToChannel(`Từ bắt đầu: **${word}**`, channel)
         fs.writeFileSync(wordDataPath, JSON.stringify(wordDataChannel))
     }
     const stopGame = (channel) => {
@@ -258,7 +290,6 @@ client.on('messageCreate', async message => {
     // console.log(args1)
 
     // functions load after channel defined
-
     /**
      * 
      * @param {String} word 
@@ -296,7 +327,6 @@ client.on('messageCreate', async message => {
         }
         return false
     }
-
     /**
      * 
      * @param {Number} userId 
