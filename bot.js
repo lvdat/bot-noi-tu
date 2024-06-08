@@ -13,6 +13,7 @@ const wordDatabasePath = path.resolve(__dirname, './data/words.txt')
 const rankingPath = path.resolve(__dirname, './data/ranking.json')
 const contributeWordsUrl = 'https://github.com/lvdat/phobo-contribute-words/raw/main/accepted-words.txt'
 const contributeWordsPath = path.resolve(__dirname, './data/contribute-words.txt')
+const premiumGuildsPath = path.resolve(__dirname, './data/premium-guilds.txt')
 
 if (!fs.existsSync(dataPath)) {
     console.log(`[WARNING] File data.json doesn't exist. Creating...`)
@@ -36,10 +37,17 @@ if (!fs.existsSync(queryPath)) {
 }
 
 if (!fs.existsSync(rankingPath)) {
-    console.log(`[WARNING] File ranking.json.json doesn't exist. Creating...`)
+    console.log(`[WARNING] File ranking.json doesn't exist. Creating...`)
     fs.writeFileSync(rankingPath, JSON.stringify(emptyData))
 } else {
     console.log(`[OK] File ranking.json exist.`)
+}
+
+if (!fs.existsSync(premiumGuildsPath)) {
+    console.log(`[WARNING] File premium-guilds.txt doesn't exist. Creating...`)
+    fs.writeFileSync(premiumGuildsPath, '')
+} else {
+    console.log(`[OK] File premium-guilds.txt exist.`)
 }
 
 const client = new Client({
