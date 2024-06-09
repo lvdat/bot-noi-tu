@@ -5,6 +5,13 @@ require('dotenv').config()
 const REPORT_CHANNEL = process.env.REPORT_CHANNEL
 const reportWordsPath = path.resolve(__dirname, './data/report-words.json')
 
+const messageEmbed = (msg) => {
+    return new EmbedBuilder()
+        .setColor(13250094)
+        .setDescription(msg)
+        .setTimestamp()
+}
+
 /**
  * 
  * @param {Object} wordData 
@@ -47,6 +54,7 @@ const reportEmbed = (wordData, status = 0) => {
                 inline: true
             }
         )
+        .setTimestamp()
 }
 
 module.exports = {
@@ -131,6 +139,10 @@ module.exports = {
                 } else {
                     status = 2
                 }
+
+                client.users.send(interaction.user.id, {
+                    embeds: [messageEmbed(`Từ \`${word}\` của bạn đã ${(status === 1) ? 'được đồng ý gỡ bỏ' : 'bị từ chối gỡ bỏ'} bởi mod \`${i.member.displayName}\``)]
+                })
 
                 await msg.edit({
                     embeds: [reportEmbed(wordData, status)],
