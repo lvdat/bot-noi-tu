@@ -4,6 +4,7 @@ const path = require('path')
 require('dotenv').config()
 const REPORT_CHANNEL = process.env.REPORT_CHANNEL
 const reportWordsPath = path.resolve(__dirname, './data/report-words.txt')
+const dictionary = require('../utils/dictionary')
 
 const messageEmbed = (msg) => {
     return new EmbedBuilder()
@@ -94,6 +95,13 @@ module.exports = {
             if (!(wArr.length == 2)) {
                 return await interaction.reply({
                     content: `Cụm từ không hợp lệ`,
+                    ephemeral: true
+                })
+            }
+
+            if (!dictionary.checkWordIfInDictionary(word)) {
+                return await interaction.reply({
+                    content: `Cụm từ này không có trong từ điển của Bot`,
                     ephemeral: true
                 })
             }
