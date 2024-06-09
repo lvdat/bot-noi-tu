@@ -106,6 +106,13 @@ module.exports = {
                 })
             }
 
+            if (dictionary.checkWordIfInReportDictionary(word)) {
+                return await interaction.reply({
+                    content: `Cụm từ này đã có trong danh sách đen của Bot`,
+                    ephemeral: true
+                })
+            }
+
             await interaction.reply({
                 content: `Đã báo cáo từ **${word}**`,
                 ephemeral: true
@@ -155,6 +162,7 @@ module.exports = {
         
                 if (i.customId === 'accept') {
                     status = 1
+                    dictionary.addWordToReportList(word)
                 } else {
                     status = 2
                 }
