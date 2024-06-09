@@ -11,29 +11,38 @@ const reportWordsPath = path.resolve(__dirname, './data/report-words.json')
  * @param {String} reason 
  * @param {String} author 
  * @param {String} svname 
+ * @param {String} svid
+ * @param {String} svicon
  * @returns {EmbedBuilder}
  */
-const reportEmbed = (word, reason, author, svname) => {
+const reportEmbed = (word, reason, author, svname, svid, svicon) => {
     return new EmbedBuilder()
         .setColor(13250094)
+        .setThumbnail(svicon)
         .addFields(
             {
-                name: 'Từ báo cáo',
+                name: ':regional_indicator_p: Từ báo cáo',
                 value: `**${word}**`,
                 inline: true
             },
             {
-                name: 'Lý do',
+                name: ':bulb: Lý do',
                 value: reason,
                 inline: true
             },
             {
-                name: 'Người gửi',
-                value: author
+                name: ':bust_in_silhouette: Người gửi',
+                value: author,
+                inline: true
             },
             {
-                name: 'Máy chủ',
+                name: ':shield: Máy chủ',
                 value: svname,
+                inline: true
+            },
+            {
+                name: ':id: ID server',
+                value: svid,
                 inline: true
             }
         )
@@ -70,7 +79,7 @@ module.exports = {
             let reason = interaction.options.getString('reason') ?? 'No reason provided.'
 
             client.channels.cache.get(REPORT_CHANNEL).send({
-                embeds: [reportEmbed(word, reason, interaction.user.username, interaction.guild.name)]
+                embeds: [reportEmbed(word, reason, interaction.user.username, interaction.guild.name, interaction.guildId, interaction.guild.iconURL({ dynamic: true }))]
             })
 
             return interaction.reply({
