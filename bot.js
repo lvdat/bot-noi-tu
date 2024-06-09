@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const { Client, GatewayIntentBits, Collection, PermissionsBitField } = require('discord.js')
 const axios = require('axios')
+const dictionary = require('./utils/dictionary')
 require('dotenv').config()
 
 const emptyData = {}
@@ -128,10 +129,6 @@ axios.get(contributeWordsUrl)
         return
     })
 
-const checkDict = (word) => {
-    return global.dicData.includes(word.toLowerCase())
-}
-
 // global config
 const START_COMMAND = '!start'
 const STOP_COMMAND = '!stop'
@@ -168,6 +165,13 @@ client.on('messageCreate', async message => {
     const dataChannel = require(dataPath)
     const wordDataChannel = require(wordDataPath)
     const rankingData = require(rankingPath)
+    const blackListWords = dictionary.getReportWords()
+
+    global.dicData = global.dicData.filter(item => !blackListWords.includes(item))
+
+    const checkDict = (word) => {
+        return global.dicData.includes(word.toLowerCase())
+    }
 
     // function
     const sendMessageToChannel = (msg, channel_id) => {
