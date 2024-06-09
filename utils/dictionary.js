@@ -55,9 +55,19 @@ const checkWordIfInReportDictionary = (word) => {
     return reportDic.includes(word)
 }
 
+/**
+ * 
+ * @param {String} word 
+ */
+const addWordToReportList = (word) => {
+    reportDic.push(word)
+    fs.writeFileSync(reportWordsPath, reportDic.join('\n'))
+}
+
 module.exports = {
     checkWordIfInDictionary,
     countWordInDictionary,
     getReportWords,
-    checkWordIfInReportDictionary
+    checkWordIfInReportDictionary,
+    addWordToReportList
 }
