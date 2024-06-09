@@ -87,6 +87,17 @@ module.exports = {
             let word = interaction.options.getString('word')
             let reason = interaction.options.getString('reason') ?? 'No reason provided.'
 
+            let tu = word.trim().toLowerCase()
+            let wArr = tu.split(/\s+/).filter(Boolean)
+            word = wArr.join(' ')
+
+            if (!(wArr.length == 2)) {
+                return await interaction.reply({
+                    content: `Cụm từ không hợp lệ`,
+                    ephemeral: true
+                })
+            }
+
             await interaction.reply({
                 content: `Đã báo cáo từ **${word}**`,
                 ephemeral: true
