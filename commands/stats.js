@@ -5,10 +5,10 @@ const path = require('path')
 const queryPath = path.resolve(__dirname, '../data/query.txt')
 const wordDatabasePath = path.resolve(__dirname, '../data/words.txt')
 const rankingPath = path.resolve(__dirname, '../data/ranking.json')
+const dictionary = require('../utils/dictionary')
 
 function getStats() {
     let queryNumber = '0'
-    let dicDataCount = 0
     let playerCount = 0
 
     try {
@@ -33,19 +33,11 @@ function getStats() {
         console.error(`Error reading file ${queryPath}:`, err)
     }
 
-    try {
-        // Đọc file words.txt và cập nhật dicDataCount
-        const wordData = fs.readFileSync(wordDatabasePath, 'utf-8')
-        dicDataCount = wordData.toLowerCase().split('\n').length
-    } catch (err) {
-        console.error(`Error reading file ${wordDatabasePath}:`, err)
-    }
-
-    return { queryNumber, dicDataCount, playerCount }
+    return { queryNumber, playerCount }
 }
 
 const statEmbed = (client) => {
-    const { queryNumber, dicDataCount, playerCount } = getStats()
+    const { queryNumber, playerCount } = getStats()
 
     return new EmbedBuilder()
     .setColor(13250094)
@@ -64,7 +56,7 @@ const statEmbed = (client) => {
         },
         {
             name: 'Tổng số từ trong ngân hàng từ',
-            value: `${dicDataCount}`
+            value: `${dictionary.countWordInDictionary()}`
         },
     )
 }
