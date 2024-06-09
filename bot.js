@@ -423,6 +423,13 @@ client.on('messageCreate', async message => {
 
     // console.log(rankingData)
 
+    // check if words have or more than 1 space
+    if (!(args1.length == 2)) {
+        // message.react('❌')
+        // sendAutoDeleteMessageToChannel('Vui lòng nhập từ có chứa nhiều hơn 2 tiếng!', configChannel)
+        return
+    }
+
     if(words.length > 0) {
         // player can't answer 2 times
         let lastPlayerId = currentWordData.currentPlayer.id
@@ -433,12 +440,7 @@ client.on('messageCreate', async message => {
         }
     }
 
-    // check if words have or more than 1 space
-    if (!(args1.length > 1)) {
-        message.react('❌')
-        sendAutoDeleteMessageToChannel('Vui lòng nhập từ có chứa nhiều hơn 2 tiếng!', configChannel)
-        return
-    }
+
 
     if (words.length > 0) {
         const lastWord = words[words.length - 1]
