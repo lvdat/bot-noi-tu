@@ -59,6 +59,13 @@ if (!fs.existsSync(reportWordsPath)) {
     console.log(`[OK] File report-words.txt exist.`)
 }
 
+if (!fs.existsSync(officalWordsPath)) {
+    console.log(`[WARNING] File official-words.txt doesn't exist. Creating...`)
+    fs.writeFileSync(officalWordsPath, '')
+} else {
+    console.log(`[OK] File official-words.txt exist.`)
+}
+
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
