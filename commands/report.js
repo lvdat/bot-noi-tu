@@ -3,7 +3,7 @@ const fs = require('fs')
 const path = require('path')
 require('dotenv').config()
 const REPORT_CHANNEL = process.env.REPORT_CHANNEL
-const reportWordsPath = path.resolve(__dirname, './data/report-words.json')
+const reportWordsPath = path.resolve(__dirname, './data/report-words.txt')
 
 const messageEmbed = (msg) => {
     return new EmbedBuilder()
