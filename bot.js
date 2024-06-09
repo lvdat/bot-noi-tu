@@ -15,6 +15,7 @@ const contributeWordsUrl = 'https://github.com/lvdat/phobo-contribute-words/raw/
 const contributeWordsPath = path.resolve(__dirname, './data/contribute-words.txt')
 const premiumGuildsPath = path.resolve(__dirname, './data/premium-guilds.txt')
 const reportWordsPath = path.resolve(__dirname, './data/report-words.txt')
+const officalWordsPath = path.resolve(__dirname, './data/official-words.txt')
 
 if (!fs.existsSync(dataPath)) {
     console.log(`[WARNING] File data.json doesn't exist. Creating...`)
@@ -112,6 +113,8 @@ axios.get(contributeWordsUrl)
         console.log('[OK] Saved ' + lines.length + ' contribute words to ' + contributeWordsPath)
         global.dicData = global.dicData.concat(lines)
         console.log('[WARNING] Bot dictionary now have ' + global.dicData.length + ' words')
+        fs.writeFileSync(officalWordsPath, global.dicData.join('\n'))
+        console.log('[OK] Saved official words to official-words.txt')
     })
     .catch(err => {
         console.log('[ERROR] Error when download contribute words: ' + err.message)
