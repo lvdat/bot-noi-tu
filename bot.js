@@ -495,7 +495,7 @@ client.on('messageCreate', async message => {
     console.log(`[${configChannel}] - #${words.length} - ${tu}`)
 
     if(!checkIfHaveAnswerInDb(tu)) {
-        sendMessageToChannel(`${message.author.displayName} đã chiến thắng sau ${words.length} lượt! Lượt mới đã bắt đầu!`, configChannel)
+        sendMessageToChannel(`${message.author.displayName} đã chiến thắng sau ${words.length - 1} lượt! Lượt mới đã bắt đầu!`, configChannel)
         updateRankingForUser(1, 0, 0)
         initWordData(configChannel)
         startGame(configChannel)
