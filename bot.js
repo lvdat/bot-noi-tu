@@ -289,7 +289,7 @@ client.on('messageCreate', async message => {
         return
     } else if (message.content === STOP_COMMAND) {
 
-        if(!message.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
+        if(!message.member.permissionsIn(configChannel).has(PermissionsBitField.Flags.ManageChannels)) {
             message.reply({
                 content: 'Bạn không có quyền dùng lệnh này',
                 ephemeral: true
