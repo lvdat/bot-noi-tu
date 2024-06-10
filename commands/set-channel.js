@@ -13,7 +13,7 @@ module.exports = {
                 .addChannelTypes(ChannelType.GuildText)
                 .setRequired(true)),
     async execute (interaction) {
-        if(!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
+        if(!interaction.member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
             await interaction.reply({
                 content: 'Bạn cần có quyền Admin để thực hiện thao tác này!',
                 ephemeral: true
