@@ -208,7 +208,7 @@ client.on('messageCreate', async message => {
             queryCount++
             let temp = global.dicData[i]
             let tempw = temp.split(/ +/)
-            if (tempw.length > 1 && tempw[0] === lc) {
+            if (tempw.length > 1 && tempw[0] === lc && temp !== word) {
                 // detect word
                 return true
             }
@@ -266,7 +266,6 @@ client.on('messageCreate', async message => {
         return
     }
     let configChannel = dataChannel[guild.id].channel
-    
     if (message.channel.id !== configChannel) return
 
     if(!isWordDataExist(configChannel)) {
@@ -346,7 +345,7 @@ client.on('messageCreate', async message => {
             queryCount++
             let temp = global.dicData[i]
             let tempw = temp.split(/ +/)
-            if (tempw.length > 1 && tempw[0] === lc) {
+            if (tempw.length > 1 && tempw[0] === lc && temp !== word) {
                 // detect word
                 if (checkIfWordUsed(temp)) {
                     // if word is used, cancel this loop round.
