@@ -2,7 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, Inte
 const fs = require('fs')
 const path = require('path')
 require('dotenv').config()
-const REPORT_CHANNEL = process.env.REPORT_CHANNEL
+const REPORT_CHANNEL = process.env.REPORT_CHANNEL || ''
 const reportWordsPath = path.resolve(__dirname, './data/report-words.txt')
 const dictionary = require('../utils/dictionary')
 
@@ -79,6 +79,13 @@ module.exports = {
      * @param {Client} client 
      */
     async execute (interaction, client) {
+        if (REPORT_CHANNEL === '') {
+            return await interaction.reply({
+                content: 'Tính năng báo cáo hiện không hoạt động!',
+                ephemeral: true
+            })
+        }
+
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
             return await interaction.reply({
                 content: 'Bạn cần có quyền admin để báo cáo từ.',
