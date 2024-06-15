@@ -32,10 +32,10 @@ const checkWordIfInDictionary = (word) => {
 
 /**
  * 
- * @returns length of dictionary array
+ * @returns {Number} length of dictionary array
  */
 const countWordInDictionary = () => {
-    return dic.length
+    return dic.length - reportDic.length
 }
 
 /**
