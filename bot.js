@@ -339,6 +339,7 @@ client.on('messageCreate', async message => {
         if (isRunning) {
             sendMessageToChannel(`Đã kết thúc lượt này! Lượt mới đã bắt đầu!`, configChannel)
             initWordData(configChannel)
+            stats.addRoundPlayedCount()
             startGame(configChannel)
         } else sendMessageToChannel('Trò chơi chưa bắt đầu. Bạn có thể dùng `!start`', configChannel)
         return
