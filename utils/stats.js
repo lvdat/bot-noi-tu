@@ -1,9 +1,9 @@
 const fs = require('fs')
 const path = require('path')
 
-const queryPath = path.resolve(__dirname, './data/query.txt')
-const wordPlayedPath = path.resolve(__dirname, './data/word-played.txt')
-const roundPlayedPath = path.resolve(__dirname, './data/round-played.txt')
+const queryPath = path.resolve(__dirname, '../data/query.txt')
+const wordPlayedPath = path.resolve(__dirname, '../data/word-played.txt')
+const roundPlayedPath = path.resolve(__dirname, '../data/round-played.txt')
 
 /**
  @returns {Number} query number total of Bot

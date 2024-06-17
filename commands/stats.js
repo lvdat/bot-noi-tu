@@ -54,7 +54,7 @@ const statEmbed = (client) => {
             inline: true
         },
         {
-            name: 'Tổng số từ đã nói',
+            name: 'Tổng số từ đã nối',
             value: `${stats.getWordPlayedCount()}`,
             inline: true
         },
