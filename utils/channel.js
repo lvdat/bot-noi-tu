@@ -17,4 +17,6 @@ const setChannel = (guildId, channelId) => {
     fs.writeFileSync(dataPath, JSON.stringify(dataChannel))
 }
 
-module.exports = {}
+module.exports = {
+    setChannel
+}
