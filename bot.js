@@ -3,6 +3,7 @@ const path = require('path')
 const { Client, GatewayIntentBits, Collection, PermissionsBitField } = require('discord.js')
 const axios = require('axios')
 const dictionary = require('./utils/dictionary')
+const { setChannel } = require('./utils/channel')
 require('dotenv').config()
 
 const emptyData = {}
@@ -132,6 +133,7 @@ axios.get(contributeWordsUrl)
 // global config
 const START_COMMAND = '!start'
 const STOP_COMMAND = '!stop'
+const PREFIX = '?phobo'
 let queryCount = parseInt(fs.readFileSync(queryPath, 'utf-8'))
 
 // We create a collection for commands
@@ -266,6 +268,27 @@ client.on('messageCreate', async message => {
         return
     }
     let configChannel = dataChannel[guild.id].channel
+
+    // FIRST LOAD
+    if (message.content.startsWith(PREFIX)) {
+        let arg = message.content.trim().split(/\s+/).filter(Boolean)[1]
+        console.log(`[${message.guild.name}][${message.channel.name}] ${message.author.displayName} used prefix command [${arg ? arg : 'no action'}]`)
+        if (arg === 'set') {
+            if (!message.member.permissionsIn(configChannel).has(PermissionsBitField.Flags.ManageGuild)) {
+                return message.reply({
+                    content: 'Bạn cần có quyền `MANAGE_GUILD` để dùng lệnh này',
+                    ephemeral: true
+                })
+            } else {
+                setChannel(message.guildId, message.channelId)
+                return message.reply({
+                    content: `Bạn đã chọn kênh **${message.channel.name}** làm kênh nối từ của máy chủ **${message.guild.name}**. Dùng \`!start\` để bắt đầu trò chơi`,
+                    ephemeral: true
+                })
+            }
+        }
+    }
+
     if (message.channel.id !== configChannel) return
 
     if(!isWordDataExist(configChannel)) {
@@ -315,8 +338,6 @@ client.on('messageCreate', async message => {
     let args1 = tu.split(/\s+/).filter(Boolean) // split fix for multiple space in word.
     tu = args1.join(' ') // remake word after split.
     let words = wordDataChannel[configChannel].words
-
-    // console.log(args1)
 
     // functions load after channel defined
     /**
@@ -491,7 +512,7 @@ client.on('messageCreate', async message => {
 
     updateRankingForUser(0, 1, 1)
 
-    console.log(`[${configChannel}] - #${words.length} - ${tu}`)
+    console.log(`[${message.guild.name}][${message.channel.name}][#${words.length}] ${tu}`)
 
     if(!checkIfHaveAnswerInDb(tu)) {
         sendMessageToChannel(`${message.author.displayName} đã chiến thắng sau ${words.length - 1} lượt! Lượt mới đã bắt đầu!`, configChannel)
@@ -515,7 +536,7 @@ client.on('interactionCreate', async (interaction) => {
     // We log when a user makes a command
     try {
         await console.log(
-            `${interaction.user.username} used /${interaction.commandName}`
+            `[${interaction.guild.name}] ${interaction.user.username} used /${interaction.commandName}`
         )
         await command.execute(interaction, client)
         // But if there is a mistake, 
