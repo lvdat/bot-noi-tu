@@ -10,6 +10,8 @@ const emptyData = {}
 const dataPath = path.resolve(__dirname, './data/data.json')
 const wordDataPath = path.resolve(__dirname, './data/word-data.json')
 const queryPath = path.resolve(__dirname, './data/query.txt')
+const wordPlayedPath = path.resolve(__dirname, './data/word-played.txt')
+const roundPlayedPath = path.resolve(__dirname, './data/round-played.txt')
 const wordDataUrl = 'https://github.com/undertheseanlp/dictionary/raw/master/dictionary/words.txt'
 const wordDatabasePath = path.resolve(__dirname, './data/words.txt')
 const rankingPath = path.resolve(__dirname, './data/ranking.json')
@@ -66,6 +68,20 @@ if (!fs.existsSync(officalWordsPath)) {
     fs.writeFileSync(officalWordsPath, '')
 } else {
     console.log(`[OK] File official-words.txt exist.`)
+}
+
+if (!fs.existsSync(wordPlayedPath)) {
+    console.log(`[WARNING] File word-played.txt doesn't exist. Creating...`)
+    fs.writeFileSync(wordPlayedPath, '0')
+} else {
+    console.log(`[OK] File word-played.txt exist.`)
+}
+
+if (!fs.existsSync(roundPlayedPath)) {
+    console.log(`[WARNING] File round-played.txt doesn't exist. Creating...`)
+    fs.writeFileSync(roundPlayedPath, '0')
+} else {
+    console.log(`[OK] File round-played.txt exist.`)
 }
 
 const client = new Client({
