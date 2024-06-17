@@ -39,14 +39,14 @@ const addWordPlayedCount = () => {
 }
 
 /**
- @returns {Number} word played count
+ @returns {Number} round played count
  */
  const getRoundPlayedCount = () => {
     return parseInt(fs.readFileSync(roundPlayedPath, 'utf-8'))
 }
 
 /**
- * add word played count.
+ * add round played count.
  */
 const addRoundPlayedCount = () => {
     let roundPlayedCount = getRoundPlayedCount()

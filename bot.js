@@ -4,6 +4,7 @@ const { Client, GatewayIntentBits, Collection, PermissionsBitField } = require('
 const axios = require('axios')
 const dictionary = require('./utils/dictionary')
 const { setChannel } = require('./utils/channel')
+const stats = require('./utils/stats')
 require('dotenv').config()
 
 const emptyData = {}
@@ -150,7 +151,7 @@ axios.get(contributeWordsUrl)
 const START_COMMAND = '!start'
 const STOP_COMMAND = '!stop'
 const PREFIX = '?phobo'
-let queryCount = parseInt(fs.readFileSync(queryPath, 'utf-8'))
+let queryCount = stats.getQuery()
 
 // We create a collection for commands
 client.commands = new Collection()
@@ -526,6 +527,8 @@ client.on('messageCreate', async message => {
 
     message.react('✅')
 
+    stats.addWordPlayedCount()
+
     updateRankingForUser(0, 1, 1)
 
     console.log(`[${message.guild.name}][${message.channel.name}][#${words.length}] ${tu}`)
@@ -533,12 +536,14 @@ client.on('messageCreate', async message => {
     if(!checkIfHaveAnswerInDb(tu)) {
         sendMessageToChannel(`${message.author.displayName} đã chiến thắng sau ${words.length - 1} lượt! Lượt mới đã bắt đầu!`, configChannel)
         updateRankingForUser(1, 0, 0)
+        stats.addRoundPlayedCount()
         initWordData(configChannel)
         startGame(configChannel)
         return
     }
 
-    fs.writeFileSync(queryPath, queryCount.toString())
+    //fs.writeFileSync(queryPath, queryCount.toString())
+    stats.addQuery(queryCount)
     return
 })
 // END LOGIC GAME
