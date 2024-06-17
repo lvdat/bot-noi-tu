@@ -6,6 +6,7 @@ const queryPath = path.resolve(__dirname, '../data/query.txt')
 const wordDatabasePath = path.resolve(__dirname, '../data/words.txt')
 const rankingPath = path.resolve(__dirname, '../data/ranking.json')
 const dictionary = require('../utils/dictionary')
+const stats = require('../utils/stats')
 
 function getStats() {
     let queryNumber = '0'
@@ -44,19 +45,33 @@ const statEmbed = (client) => {
     .addFields(
         {
             name: 'Tổng số server đang sử dụng',
-            value: `${client.guilds.cache.size} servers`
+            value: `${client.guilds.cache.size} servers`,
+            inline: true
         },
         {
             name: 'Tổng số người đã chơi',
-            value: `${playerCount}`
+            value: `${playerCount}`,
+            inline: true
+        },
+        {
+            name: 'Tổng số từ đã nói',
+            value: `${stats.getWordPlayedCount()}`,
+            inline: true
+        },
+        {
+            name: 'Tổng số vòng đã diễn ra',
+            value: `${stats.getRoundPlayedCount()}`,
+            inline: true
         },
         {
             name: 'Tổng số truy vấn dữ liệu',
-            value: `${queryNumber}`
+            value: `${queryNumber}`,
+            inline: true
         },
         {
             name: 'Tổng số từ trong ngân hàng từ',
-            value: `${dictionary.countWordInDictionary()}`
+            value: `${dictionary.countWordInDictionary()}`,
+            inline: true
         },
     )
 }
