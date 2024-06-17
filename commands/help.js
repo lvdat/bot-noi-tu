@@ -6,7 +6,7 @@ const helpEmbed = () => new EmbedBuilder()
     .addFields(
         {
             name: 'Cài đặt kênh chơi nối từ',
-            value: 'Dùng lệnh slash `/set-channel <channel>`',
+            value: 'Dùng lệnh slash `/set-channel <channel>` hoặc dùng `?phobo set` trong kênh nối từ.',
             inline: true
         },
         {
