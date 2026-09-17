@@ -93,16 +93,12 @@ dist
 
 # Gatsby files
 .cache/
-# Comment in the public line in if your project uses Gatsby and not Next.js
-# https://nextjs.org/blog/next-9-1#public-directory-support
-# public
 
 # vuepress build output
 .vuepress/dist
 
 # vuepress v2.x temp and cache directory
 .temp
-.cache
 
 # Docusaurus cache and generated files
 .docusaurus
@@ -128,16 +124,10 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-data/data.json
-query.txt
-score.txt
-data/word-data.json
-data/words.txt
-data/stats.txt
-data/ranking.json
-data/contribute-words.txt
-data/premium-guilds.txt
-data/report-words.txt
-data/official-words.txt
-data/round-played.txt
-data/word-played.txt
+
+# Prisma
+prisma/*.db
+prisma/*.db-journal
+
+# Data directory (legacy, no longer used in v2)
+data/

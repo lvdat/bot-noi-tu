@@ -11,7 +11,8 @@ BOT nối từ tiếng Việt trên Discord! | [INVITE ME!](https://discord.com/
 ### Yêu cầu
 - Hệ điều hành: `Linux, MacOS, Windows`, có cài đặt:
   - `NodeJS >= 18` (BOT được phát triển trên `NodeJS 20.x`)
-  - Có cài đặt gói `yarn` (`npm i -g yarn`)
+  - Có cài đặt `pnpm` (`npm i -g pnpm`)
+  - PostgreSQL database
   - Git
 
 ### Cài đặt
@@ -21,18 +22,32 @@ git clone https://github.com/lvdat/bot-noi-tu && cd bot-noi-tu
 ```
 - Cài đặt các gói cần thiết:
 ```bash
-yarn
+pnpm install
 ```
-- Tạo tệp tin `.env` với nội dung là **TOKEN của BOT** đã tạo trong Discord Developer Portal
+- Tạo tệp tin `.env` với nội dung:
 ```bash
 BOT_TOKEN=...
+DATABASE_URL=postgresql://user:password@localhost:5432/bot_noi_tu
 ```
 > Không bắt buộc: config thêm `REPORT_CHANNEL` để có thể dùng lệnh report.
-- Chạy BOT lần đầu để tạo các file cần thiết
+
+- Khởi tạo database:
 ```bash
-node bot
+pnpm db:push
 ```
-> Backup các file trong thư mục `data` để lưu lại và phục hồi dữ liệu khi cần thiết.
+
+- Seed dữ liệu từ điển vào database:
+```bash
+pnpm db:seed
+```
+
+- Chạy BOT:
+```bash
+pnpm start
+```
+
+> Để quản lý dữ liệu, có thể dùng Prisma Studio: `pnpm db:studio`
+
 - Tạo link mời BOT vào máy chủ
   - Trong bảng điều khiển, chọn Tab `Installation` và tích chọn `Guild Install`
     ![image](https://github.com/lvdat/bot-noi-tu/assets/72507371/638fda71-7378-409e-9e23-be04a6b8597a)
@@ -57,7 +72,27 @@ node bot
 
   - Copy URL trong trường `GENERATED URL` và mở trong trình duyệt.
 </details>
-  
+
+## Cấu trúc dự án
+
+```
+src/
+├── index.js                ← Entry point
+├── config.js               ← Constants & cấu hình
+├── database/
+│   ├── prisma.js           ← Prisma client singleton
+│   └── seed.js             ← Seed từ điển vào database
+├── game/
+│   ├── engine.js           ← Core game logic
+│   ├── dictionary.js       ← Dictionary service (Map index)
+│   └── validator.js        ← Word validation
+├── commands/               ← Slash commands
+├── events/                 ← Discord event handlers
+├── modules/                ← Shared modules
+└── utils/                  ← Utility helpers
+prisma/
+└── schema.prisma           ← Database schema
+```
 
 ## Các lệnh của BOT
 |        **Lệnh**        |         **Chức năng**         |   **Quyền cần**   |
@@ -71,4 +106,3 @@ node bot
 | /me                    | Xem thống kê nối từ cá nhân   |                   |
 | /server                | Xem thông tin máy chủ         |                   |
 | /report <từ> [lí do]   | Báo cáo từ không phù hợp      | `MANAGE_GUILD`    |
-
