@@ -2,6 +2,7 @@ import { PermissionsBitField } from 'discord.js'
 import { PREFIX, START_COMMAND, STOP_COMMAND } from '../config.js'
 import { getConfiguredChannel, setChannel, ensureGuild, startGame, stopGame, processWord, incrementStats } from '../game/engine.js'
 import { sendMessageToChannel } from '../utils/message.js'
+import prisma from '../database/prisma.js'
 
 export default {
     name: 'messageCreate',
@@ -68,8 +69,6 @@ export default {
         // Handle !start command
         if (message.content === START_COMMAND) {
             // Check if a game is already running
-            const { PrismaClient } = await import('@prisma/client')
-            const prisma = (await import('../database/prisma.js')).default
             const session = await prisma.gameSession.findFirst({
                 where: { channelId: configChannel, isRunning: true }
             })
@@ -93,7 +92,6 @@ export default {
                 return
             }
 
-            const prisma = (await import('../database/prisma.js')).default
             const session = await prisma.gameSession.findFirst({
                 where: { channelId: configChannel, isRunning: true }
             })
