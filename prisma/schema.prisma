@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Guild {
+  id        String   @id // Discord guild ID
+  channelId String? // Configured word-chain channel
+  isPremium Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  players      Player[]
+  gameSessions GameSession[]
+}
+
+model Player {
+  guildId       String
+  userId        String // Discord user ID
+  name          String
+  avatar        String?
+  wins          Int     @default(0)
+  correctWords  Int     @default(0)
+  totalAttempts Int     @default(0)
+
+  guild Guild @relation(fields: [guildId], references: [id])
+
+  @@id([guildId, userId])
+}
+
+model GameSession {
+  id                Int      @id @default(autoincrement())
+  guildId           String
+  channelId         String
+  isRunning         Boolean  @default(false)
+  currentPlayerId   String?
+  currentPlayerName String?
+  createdAt         DateTime @default(now())
+
+  guild Guild      @relation(fields: [guildId], references: [id])
+  words GameWord[]
+}
+
+model GameWord {
+  id        Int         @id @default(autoincrement())
+  sessionId Int
+  word      String
+  playedAt  DateTime    @default(now())
+
+  session GameSession @relation(fields: [sessionId], references: [id])
+}
+
+model DictionaryWord {
+  id            Int     @id @default(autoincrement())
+  word          String  @unique
+  firstSyllable String // First syllable for fast lookup
+  lastSyllable  String // Last syllable for fast lookup
+  isReported    Boolean @default(false) // Blacklisted words
+
+  @@index([firstSyllable])
+  @@index([lastSyllable])
+  @@index([isReported])
+}
+
+model BotStats {
+  id           String @id @default("global")
+  totalQueries BigInt @default(0)
+  wordsPlayed  BigInt @default(0)
+  roundsPlayed BigInt @default(0)
+}

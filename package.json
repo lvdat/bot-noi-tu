@@ -1,10 +1,18 @@
 {
   "name": "bot-noi-tu",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Vietnamese word-chain BOT on Discord!",
-  "main": "bot.js",
+  "type": "module",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js",
+    "db:push": "prisma db push",
+    "db:seed": "node src/database/seed.js",
+    "db:studio": "prisma studio",
+    "postinstall": "prisma generate"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "repository": {
     "type": "git",
@@ -13,14 +21,13 @@
   "author": "lvdat",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^6.9.0",
     "axios": "^1.6.7",
     "discord.js": "^14.14.1",
-    "dotenv": "^16.4.5",
-    "g": "^2.0.1",
-    "moment": "^2.30.1",
-    "moment-timezone": "^0.5.45",
-    "mongodb": "^6.3.0",
-    "mongoose": "^8.2.0",
-    "pnpm": "^8.15.4"
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "prisma": "^6.9.0"
   }
 }
+
