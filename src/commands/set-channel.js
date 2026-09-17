@@ -1,0 +1,58 @@
+import { SlashCommandBuilder, ChannelType, PermissionsBitField } from 'discord.js'
+import { setChannel } from '../game/engine.js'
+
+export default {
+    data: new SlashCommandBuilder()
+        .setName('set-channel')
+        .setDescription('Cài đặt kênh chơi nối từ')
+        .addChannelOption(option =>
+            option.setName('channel')
+                .setDescription('Kênh chơi nối từ')
+                .addChannelTypes(ChannelType.GuildText)
+                .setRequired(true)),
+    async execute (interaction) {
+        if(!interaction.member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
+            await interaction.reply({
+                content: 'Bạn cần có quyền Admin để thực hiện thao tác này!',
+                ephemeral: true
+            })
+        } else {
+            let guild = interaction.member.guild
+            let channel = interaction.options.getChannel('channel')
+
+            // check send permission for bot
+            if (!interaction.member.permissionsIn(channel).has(PermissionsBitField.Flags.ViewChannel)) {
+                await interaction.reply({
+                    content: 'Tôi không có quyền xem kênh này!',
+                    ephemeral: true
+                })
+                return
+            }
+
+            if (!interaction.member.permissionsIn(channel).has(PermissionsBitField.Flags.SendMessages)) {
+                await interaction.reply({
+                    content: 'Tôi không có quyền gửi tin nhắn ở kênh này!',
+                    ephemeral: true
+                })
+                return
+            }
+
+            if (!interaction.member.permissionsIn(channel).has(PermissionsBitField.Flags.AddReactions)) {
+                await interaction.reply({
+                    content: 'Tôi không có quyền thả cảm xúc vào tin nhắn ở kênh này!',
+                    ephemeral: true
+                })
+                return
+            }
+
+            await setChannel(interaction.guildId, channel.id)
+
+            await interaction.reply({
+                content: `Bạn đã chọn kênh **${channel.name}** làm kênh chơi nối từ của máy chủ **${interaction.member.guild.name}**!`,
+                flags: [4096]
+            })
+
+            return
+        }
+    }
+}
