@@ -1,8 +1,8 @@
-import { ActivityType } from 'discord.js'
+import { ActivityType, Events } from 'discord.js'
 import synchronizeSlashCommands from '../modules/syncCommands.js'
 
 export default {
-    name: 'ready',
+    name: Events.ClientReady,
     once: true,
     async execute(client) {
         console.log(`Connected as ${client.user.username}`)

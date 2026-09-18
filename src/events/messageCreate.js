@@ -25,14 +25,12 @@ export default {
                 if (arg === 'set') {
                     if (!message.member.permissionsIn(channel).has(PermissionsBitField.Flags.ManageGuild)) {
                         return message.reply({
-                            content: 'Bạn cần có quyền `MANAGE_GUILD` để dùng lệnh này',
-                            ephemeral: true
+                            content: 'Bạn cần có quyền `MANAGE_GUILD` để dùng lệnh này'
                         })
                     } else {
                         await setChannel(guild.id, channel.id)
                         return message.reply({
-                            content: `Bạn đã chọn kênh **${channel.name}** làm kênh nối từ của máy chủ **${guild.name}**. Dùng \`!start\` để bắt đầu trò chơi`,
-                            ephemeral: true
+                            content: `Bạn đã chọn kênh **${channel.name}** làm kênh nối từ của máy chủ **${guild.name}**. Dùng \`!start\` để bắt đầu trò chơi`
                         })
                     }
                 }
@@ -86,8 +84,7 @@ export default {
         if (message.content === STOP_COMMAND) {
             if (!message.member.permissionsIn(configChannel).has(PermissionsBitField.Flags.ManageChannels)) {
                 message.reply({
-                    content: 'Bạn không có quyền dùng lệnh này',
-                    ephemeral: true
+                    content: 'Bạn không có quyền dùng lệnh này'
                 })
                 return
             }

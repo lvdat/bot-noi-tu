@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, PermissionsBitField, ButtonStyle } from 'discord.js'
+import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, PermissionsBitField, ButtonStyle, MessageFlags } from 'discord.js'
 import 'dotenv/config'
 import { checkWord, isWordReported, reportWord } from '../game/dictionary.js'
 import { normalizeWord, isValidFormat } from '../game/validator.js'
@@ -79,14 +79,14 @@ export default {
         if (REPORT_CHANNEL === '') {
             return await interaction.reply({
                 content: 'Tính năng báo cáo hiện không hoạt động!',
-                ephemeral: true
+                flags: [MessageFlags.Ephemeral]
             })
         }
 
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
             return await interaction.reply({
                 content: 'Bạn cần có quyền admin để báo cáo từ.',
-                ephemeral: true
+                flags: [MessageFlags.Ephemeral]
             })
         } else {
             let word = interaction.options.getString('word')
@@ -97,27 +97,27 @@ export default {
             if (!isValidFormat(word)) {
                 return await interaction.reply({
                     content: `Cụm từ không hợp lệ`,
-                    ephemeral: true
+                    flags: [MessageFlags.Ephemeral]
                 })
             }
 
             if (!checkWord(word)) {
                 return await interaction.reply({
                     content: `Cụm từ này không có trong từ điển của Bot`,
-                    ephemeral: true
+                    flags: [MessageFlags.Ephemeral]
                 })
             }
 
             if (await isWordReported(word)) {
                 return await interaction.reply({
                     content: `Cụm từ này đã có trong danh sách đen của Bot`,
-                    ephemeral: true
+                    flags: [MessageFlags.Ephemeral]
                 })
             }
 
             await interaction.reply({
                 content: `Đã báo cáo từ **${word}**`,
-                ephemeral: true
+                flags: [MessageFlags.Ephemeral]
             })
 
             const acceptButton = new ButtonBuilder()
@@ -156,7 +156,7 @@ export default {
                 if (!i.member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
                     return i.reply({
                         content: 'Bạn không có quyền này',
-                        ephemeral: true
+                        flags: [MessageFlags.Ephemeral]
                     })
                 }
 

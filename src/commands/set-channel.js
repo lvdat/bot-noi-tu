@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChannelType, PermissionsBitField } from 'discord.js'
+import { SlashCommandBuilder, ChannelType, PermissionsBitField, MessageFlags } from 'discord.js'
 import { setChannel } from '../game/engine.js'
 
 export default {
@@ -14,7 +14,7 @@ export default {
         if(!interaction.member.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
             await interaction.reply({
                 content: 'Bạn cần có quyền Admin để thực hiện thao tác này!',
-                ephemeral: true
+                flags: [MessageFlags.Ephemeral]
             })
         } else {
             let guild = interaction.member.guild
@@ -24,7 +24,7 @@ export default {
             if (!interaction.member.permissionsIn(channel).has(PermissionsBitField.Flags.ViewChannel)) {
                 await interaction.reply({
                     content: 'Tôi không có quyền xem kênh này!',
-                    ephemeral: true
+                    flags: [MessageFlags.Ephemeral]
                 })
                 return
             }
@@ -32,7 +32,7 @@ export default {
             if (!interaction.member.permissionsIn(channel).has(PermissionsBitField.Flags.SendMessages)) {
                 await interaction.reply({
                     content: 'Tôi không có quyền gửi tin nhắn ở kênh này!',
-                    ephemeral: true
+                    flags: [MessageFlags.Ephemeral]
                 })
                 return
             }
@@ -40,7 +40,7 @@ export default {
             if (!interaction.member.permissionsIn(channel).has(PermissionsBitField.Flags.AddReactions)) {
                 await interaction.reply({
                     content: 'Tôi không có quyền thả cảm xúc vào tin nhắn ở kênh này!',
-                    ephemeral: true
+                    flags: [MessageFlags.Ephemeral]
                 })
                 return
             }
