@@ -67,7 +67,8 @@ export default {
         .setDescription('Xem các thống kê của BOT'),
 
     async execute(interaction, client) {
-        await interaction.reply({
+        await interaction.deferReply()
+        await interaction.editReply({
             embeds: [await statEmbed(client)],
             flags: [4096]
         })

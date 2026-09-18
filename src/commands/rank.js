@@ -87,7 +87,8 @@ export default {
         .setDescription('Xem bảng xếp hạng nối từ'),
 
     async execute(interaction, client) {
-        await interaction.reply({
+        await interaction.deferReply()
+        await interaction.editReply({
             embeds: [await rankEmbed(interaction)]
         })
     }

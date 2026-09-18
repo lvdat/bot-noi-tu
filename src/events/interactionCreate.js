@@ -1,3 +1,5 @@
+import { MessageFlags } from 'discord.js'
+
 export default {
     name: 'interactionCreate',
     once: false,
@@ -6,21 +8,27 @@ export default {
         const command = client.commands.get(interaction.commandName)
         if (!command) return
 
-        // We log when a user makes a command
         try {
             console.log(
                 `[${interaction.guild.name}] ${interaction.user.username} used /${interaction.commandName}`
             )
             await command.execute(interaction, client)
-            // But if there is a mistake,
-            // then we log that and send an error message only to the person (ephemeral: true)
         } catch (error) {
             console.error(error)
-            return interaction.reply({
-                content: "An error occurred while executing this command!",
-                ephemeral: true,
-                fetchReply: true
-            })
+            try {
+                const errorPayload = {
+                    content: "An error occurred while executing this command!",
+                    flags: [MessageFlags.Ephemeral]
+                }
+                if (interaction.deferred || interaction.replied) {
+                    await interaction.editReply(errorPayload)
+                } else {
+                    await interaction.reply(errorPayload)
+                }
+            } catch (replyError) {
+                // Interaction expired or already handled, nothing we can do
+                console.error('[ERROR] Could not send error reply:', replyError.message)
+            }
         }
     }
 }

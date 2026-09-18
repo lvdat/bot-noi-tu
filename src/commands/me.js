@@ -56,7 +56,8 @@ export default {
         .setDescription('Xem thống kê nối từ của bạn'),
 
     async execute(interaction, client) {
-        await interaction.reply({
+        await interaction.deferReply()
+        await interaction.editReply({
             embeds: [await meEmbed(interaction)]
         })
     }

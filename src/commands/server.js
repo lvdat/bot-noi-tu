@@ -65,7 +65,8 @@ export default {
         .setDescription('Xem thông tin máy chủ'),
 
     async execute (interaction, client) {
-        await interaction.reply({
+        await interaction.deferReply()
+        await interaction.editReply({
             embeds: [await serverEmbed(interaction, client)]
         })
     }

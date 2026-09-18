@@ -1,4 +1,4 @@
-import { EmbedBuilder } from 'discord.js'
+import { EmbedBuilder, MessageFlags } from 'discord.js'
 
 export default {
     // "data" is the body of the command,
@@ -16,11 +16,12 @@ export default {
             name: `Đang kiểm tra ping...`,
             iconURL: client.user.avatarURL()
         })
-        const sent = await interaction.reply({
+        const response = await interaction.reply({
             embeds: [PingBeforeEmbed],
-            fetchReply: true,
-            ephemeral: true
+            withResponse: true,
+            flags: [MessageFlags.Ephemeral]
         })
+        const sent = response.resource.message
         const TotalPing = sent.createdTimestamp - interaction.createdTimestamp
         const PingEmbed = new EmbedBuilder()
         .setAuthor({
@@ -40,8 +41,7 @@ export default {
             }
         )
         await interaction.editReply({
-            embeds: [PingEmbed],
-            ephemeral: true
+            embeds: [PingEmbed]
         })
     }
 }
